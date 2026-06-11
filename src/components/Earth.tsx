@@ -11,6 +11,7 @@ type EarthProps = {
 export function Earth({ earthRef }: EarthProps) {
   const earthTexture = useTexture("/earth-texture.jpg")
   const cloudsTexture = useTexture("/clouds-texture.jpg")
+  const nightTexture = useTexture("/earth-night-texture.jpg")
 
   const localEarthRef = useRef<THREE.Mesh>(null)
   const resolvedEarthRef = earthRef ?? localEarthRef
@@ -33,6 +34,50 @@ export function Earth({ earthRef }: EarthProps) {
           map={earthTexture}
           roughness={0.9}
           metalness={0.05}
+          emissiveMap={nightTexture}
+          emissive="#ffffff"
+          emissiveIntensity={2}
+          onBeforeCompile={(shader) => {
+            // 1. Pass the exact world normal from the Vertex Shader to the Fragment Shader
+            shader.vertexShader = shader.vertexShader.replace(
+              "#include <common>",
+              "#include <common>\nvarying vec3 vWorldNormal;"
+            )
+            shader.vertexShader = shader.vertexShader.replace(
+              "#include <worldpos_vertex>",
+              `#include <worldpos_vertex>
+         vWorldNormal = normalize((modelMatrix * vec4(objectNormal, 0.0)).xyz);`
+            )
+
+            // 2. Intercept the Emissive Map calculation in the Fragment Shader
+            shader.fragmentShader = shader.fragmentShader.replace(
+              "#include <common>",
+              "#include <common>\nvarying vec3 vWorldNormal;"
+            )
+            shader.fragmentShader = shader.fragmentShader.replace(
+              "#include <emissivemap_fragment>",
+              `
+        #ifdef USE_EMISSIVEMAP
+          vec4 emissiveColor = texture2D( emissiveMap, vEmissiveMapUv );
+          
+          // Sun is hardcoded at X=100, meaning the light travels precisely along vec3(1.0, 0.0, 0.0)
+          vec3 sunDirection = vec3(1.0, 0.0, 0.0);
+          
+          // Calculate how directly this pixel is facing the sun
+          float sunDot = dot(vWorldNormal, sunDirection);
+          
+          // Create the Twilight Mask
+          // If sunDot is > 0.1 (Daytime), multiplier is 0.0 (Lights off)
+          // If sunDot is < -0.15 (Deep Night), multiplier is 1.0 (Lights on)
+          // Anything in between blends smoothly!
+          float nightMask = smoothstep(0.1, -0.15, sunDot);
+          
+          // Apply the mask mathematically to the emissive output
+          totalEmissiveRadiance *= emissiveColor.rgb * nightMask;
+        #endif
+        `
+            )
+          }}
         />
       </mesh>
 
