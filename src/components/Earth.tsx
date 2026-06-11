@@ -6,9 +6,10 @@ import { SPHERE_SEGMENTS } from "../constants"
 
 type EarthProps = {
   earthRef?: RefObject<THREE.Mesh | null>
+  rotationPaused?: boolean
 }
 
-export function Earth({ earthRef }: EarthProps) {
+export function Earth({ earthRef, rotationPaused = false }: EarthProps) {
   const earthTexture = useTexture("/earth-texture.jpg")
   const cloudsTexture = useTexture("/clouds-texture.jpg")
   const nightTexture = useTexture("/earth-night-texture.jpg")
@@ -17,11 +18,12 @@ export function Earth({ earthRef }: EarthProps) {
   const resolvedEarthRef = earthRef ?? localEarthRef
   const cloudsRef = useRef<THREE.Mesh>(null)
 
-  useFrame(({ clock }) => {
-    const elapsedTime = clock.getElapsedTime()
+  useFrame((_, delta) => {
+    if (rotationPaused) return
+
     if (resolvedEarthRef.current)
-      resolvedEarthRef.current.rotation.y = elapsedTime * 0.015
-    if (cloudsRef.current) cloudsRef.current.rotation.y = elapsedTime * 0.018
+      resolvedEarthRef.current.rotation.y += delta * 0.015
+    if (cloudsRef.current) cloudsRef.current.rotation.y += delta * 0.018
   })
 
   const axialTilt = 23.5 * (Math.PI / 180)

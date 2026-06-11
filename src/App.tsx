@@ -1,6 +1,7 @@
 import { Suspense, useRef, useState } from "react"
 import { Canvas } from "@react-three/fiber"
 import { OrbitControls, Stars } from "@react-three/drei"
+import { Pause, Play } from "lucide-react"
 import * as THREE from "three"
 import { Earth } from "./components/Earth"
 import { Moon } from "./components/Moon"
@@ -9,21 +10,45 @@ import {
   AtmosphericEntryTracker,
   type EntryCoordinates,
 } from "./components/AtmosphericEntryTracker"
+import { useReverseGeocode } from "./hooks/useReverseGeocode"
 
 const ORBIT_MIN_DISTANCE = 3.5
 
 function CoordinateOverlay({
   coordinates,
+  rotationPaused,
+  onToggleRotation,
 }: {
   coordinates: EntryCoordinates | null
+  rotationPaused: boolean
+  onToggleRotation: () => void
 }) {
   const hasCoordinates =
     coordinates &&
     Number.isFinite(coordinates.latitude) &&
     Number.isFinite(coordinates.longitude)
+  const isLocked = coordinates?.maxZoomReached ?? false
+  const reverseGeocode = useReverseGeocode(
+    coordinates?.latitude,
+    coordinates?.longitude,
+    isLocked
+  )
+  const isScanning =
+    isLocked &&
+    (reverseGeocode.isLoading ||
+      reverseGeocode.status === "scanning" ||
+      !reverseGeocode.location)
+  const locationLabel = isScanning
+    ? "Scanning topography..."
+    : reverseGeocode.location
+  const descentTarget = reverseGeocode.location ?? "Unknown Sector"
+
+  function handleInitiateDescent() {
+    console.log("Descent initiated to: ", descentTarget)
+  }
 
   return (
-    <div className="pointer-events-none absolute top-4 left-4 z-10 rounded-md border border-white/15 bg-black/65 px-4 py-3 font-mono text-xs text-white shadow-xl backdrop-blur-md">
+    <div className="pointer-events-none absolute top-4 left-4 z-10 w-[min(22rem,calc(100vw-2rem))] rounded-md border border-white/15 bg-black/65 px-4 py-3 font-mono text-xs text-white shadow-xl backdrop-blur-md">
       <div className="mb-2 text-[10px] font-semibold tracking-[0.18em] text-white/55 uppercase">
         Atmospheric Entry
       </div>
@@ -49,6 +74,40 @@ function CoordinateOverlay({
           {hasCoordinates ? coordinates.longitude.toFixed(6) : "--"}
         </dd>
       </dl>
+      <button
+        type="button"
+        className="pointer-events-auto mt-3 flex w-full items-center justify-center gap-2 rounded border border-white/15 bg-white/5 px-3 py-2 text-[11px] font-semibold tracking-[0.12em] text-white/85 uppercase transition-colors hover:border-white/30 hover:bg-white/10"
+        onClick={onToggleRotation}
+      >
+        {rotationPaused ? (
+          <Play aria-hidden="true" className="h-3.5 w-3.5" />
+        ) : (
+          <Pause aria-hidden="true" className="h-3.5 w-3.5" />
+        )}
+        {rotationPaused ? "Resume Rotation" : "Stop Rotation"}
+      </button>
+      {isLocked && (
+        <div className="mt-4 border-t border-white/10 pt-3">
+          <div className="text-[10px] font-semibold tracking-[0.18em] text-white/45 uppercase">
+            Resolved Location
+          </div>
+          <div
+            className={`mt-1 text-sm ${
+              reverseGeocode.isLoading ? "text-white/60" : "text-white"
+            }`}
+          >
+            {locationLabel}
+          </div>
+          <button
+            type="button"
+            className="pointer-events-auto mt-3 w-full rounded border border-emerald-300/45 bg-emerald-300/10 px-3 py-2 text-[11px] font-semibold tracking-[0.12em] text-emerald-100 uppercase transition-colors hover:border-emerald-200 hover:bg-emerald-300/20 disabled:cursor-wait disabled:border-white/15 disabled:bg-white/5 disabled:text-white/40"
+            disabled={isScanning}
+            onClick={handleInitiateDescent}
+          >
+            Initiate Descent To {descentTarget}
+          </button>
+        </div>
+      )}
     </div>
   )
 }
@@ -77,13 +136,22 @@ export default function App() {
   const earthRef = useRef<THREE.Mesh>(null)
   const [entryCoordinates, setEntryCoordinates] =
     useState<EntryCoordinates | null>(null)
+  const [rotationPaused, setRotationPaused] = useState(false)
   const isLocked = entryCoordinates?.maxZoomReached ?? false
+
+  function handleToggleRotation() {
+    setRotationPaused((paused) => !paused)
+  }
+
   return (
     <main className="relative h-screen w-screen overflow-hidden bg-black">
-      <CoordinateOverlay coordinates={entryCoordinates} />
+      <CoordinateOverlay
+        coordinates={entryCoordinates}
+        rotationPaused={rotationPaused}
+        onToggleRotation={handleToggleRotation}
+      />
       <Crosshair isLocked={isLocked} />
       <Canvas
-        shadows
         camera={{ position: [3, 1.5, 5], fov: 45 }}
         gl={{ logarithmicDepthBuffer: true }}
         className="h-full w-full"
@@ -100,7 +168,7 @@ export default function App() {
         />
 
         <Suspense fallback={null}>
-          <Earth earthRef={earthRef} />
+          <Earth earthRef={earthRef} rotationPaused={rotationPaused} />
           <Moon />
         </Suspense>
 
