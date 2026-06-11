@@ -1,27 +1,33 @@
-import * as THREE from "three";
-import { useRef } from "react";
-import { useFrame } from "@react-three/fiber";
-import { useTexture } from "@react-three/drei";
-import { SPHERE_SEGMENTS } from "../constants";
+import * as THREE from "three"
+import { useRef, type RefObject } from "react"
+import { useFrame } from "@react-three/fiber"
+import { useTexture } from "@react-three/drei"
+import { SPHERE_SEGMENTS } from "../constants"
 
-export function Earth() {
-  const earthTexture = useTexture("/earth-texture.jpg");
-  const cloudsTexture = useTexture("/clouds-texture.jpg"); 
+type EarthProps = {
+  earthRef?: RefObject<THREE.Mesh | null>
+}
 
-  const earthRef = useRef<THREE.Mesh>(null);
-  const cloudsRef = useRef<THREE.Mesh>(null);
+export function Earth({ earthRef }: EarthProps) {
+  const earthTexture = useTexture("/earth-texture.jpg")
+  const cloudsTexture = useTexture("/clouds-texture.jpg")
+
+  const localEarthRef = useRef<THREE.Mesh>(null)
+  const resolvedEarthRef = earthRef ?? localEarthRef
+  const cloudsRef = useRef<THREE.Mesh>(null)
 
   useFrame(({ clock }) => {
-    const elapsedTime = clock.getElapsedTime();
-    if (earthRef.current) earthRef.current.rotation.y = elapsedTime * 0.015;
-    if (cloudsRef.current) cloudsRef.current.rotation.y = elapsedTime * 0.018;
-  });
+    const elapsedTime = clock.getElapsedTime()
+    if (resolvedEarthRef.current)
+      resolvedEarthRef.current.rotation.y = elapsedTime * 0.015
+    if (cloudsRef.current) cloudsRef.current.rotation.y = elapsedTime * 0.018
+  })
 
-  const axialTilt = 23.5 * (Math.PI / 180);
+  const axialTilt = 23.5 * (Math.PI / 180)
 
   return (
     <group rotation={[0, 0, axialTilt]}>
-      <mesh ref={earthRef} castShadow>
+      <mesh ref={resolvedEarthRef} castShadow>
         <sphereGeometry args={[2, SPHERE_SEGMENTS, SPHERE_SEGMENTS]} />
         <meshStandardMaterial
           map={earthTexture}
@@ -58,5 +64,5 @@ export function Earth() {
         />
       </mesh>
     </group>
-  );
+  )
 }

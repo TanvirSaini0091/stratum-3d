@@ -1,9 +1,9 @@
-import { useRef } from "react";
-import { SUN_POSITION } from "../constants";
-import * as THREE from "three";
+import { useRef } from "react"
+import { SUN_POSITION } from "../constants"
+import * as THREE from "three"
 
 export function Sun() {
-  const lightRef = useRef<THREE.DirectionalLight>(null);
+  const lightRef = useRef<THREE.DirectionalLight>(null)
 
   return (
     <group>
@@ -27,5 +27,5 @@ export function Sun() {
         />
       </directionalLight>
     </group>
-  );
+  )
 }
