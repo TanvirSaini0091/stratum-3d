@@ -48,12 +48,14 @@ function getReadableLocation(data: NominatimReverseResponse): string {
     address.village ??
     address.hamlet ??
     address.municipality
-  const waterBody = address.ocean ?? address.sea ?? address.bay ?? address.strait
+  const waterBody =
+    address.ocean ?? address.sea ?? address.bay ?? address.strait
 
   if (locality && address.country) return `${locality}, ${address.country}`
   if (locality) return locality
   if (waterBody) return waterBody
-  if (address.state && address.country) return `${address.state}, ${address.country}`
+  if (address.state && address.country)
+    return `${address.state}, ${address.country}`
   if (address.country) return address.country
 
   return data.name ?? data.display_name ?? "Unknown Sector"
@@ -137,9 +139,12 @@ export function useReverseGeocode(
           zoom: "10",
         })
 
-        const response = await fetch(`/api/nominatim/reverse?${params.toString()}`, {
-          signal: controller.signal,
-        })
+        const response = await fetch(
+          `/api/nominatim/reverse?${params.toString()}`,
+          {
+            signal: controller.signal,
+          }
+        )
 
         if (!response.ok) {
           throw new Error(`Nominatim returned ${response.status}`)

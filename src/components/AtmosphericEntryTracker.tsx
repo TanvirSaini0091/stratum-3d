@@ -15,6 +15,7 @@ export type EntryCoordinates = {
 
 type AtmosphericEntryTrackerProps = {
   earthRef: RefObject<THREE.Mesh | null>
+  enabled?: boolean
   minDistance: number
   setEntryCoordinates: Dispatch<SetStateAction<EntryCoordinates | null>>
 }
@@ -45,12 +46,15 @@ function localPointToLatLon(point: THREE.Vector3) {
 
 export function AtmosphericEntryTracker({
   earthRef,
+  enabled = true,
   minDistance,
   setEntryCoordinates,
 }: AtmosphericEntryTrackerProps) {
   const raycaster = useMemo(() => new THREE.Raycaster(), [])
 
   useFrame(({ camera }) => {
+    if (!enabled) return
+
     const earth = earthRef.current
     if (!earth) return
 

@@ -3,6 +3,7 @@ import { Canvas } from "@react-three/fiber"
 import { OrbitControls, Stars } from "@react-three/drei"
 import { Pause, Play } from "lucide-react"
 import * as THREE from "three"
+import { DescentCameraAnimator } from "./components/DescentCameraAnimator"
 import { Earth } from "./components/Earth"
 import { Moon } from "./components/Moon"
 import { Sun } from "./components/Sun"
@@ -11,16 +12,26 @@ import {
   type EntryCoordinates,
 } from "./components/AtmosphericEntryTracker"
 import { useReverseGeocode } from "./hooks/useReverseGeocode"
+import type { DescentState } from "./types/descent"
 
 const ORBIT_MIN_DISTANCE = 3.5
 
+type LandedCoordinates = {
+  latitude: number
+  longitude: number
+}
+
 function CoordinateOverlay({
   coordinates,
+  descentState,
   rotationPaused,
+  onInitiateDescent,
   onToggleRotation,
 }: {
   coordinates: EntryCoordinates | null
+  descentState: DescentState
   rotationPaused: boolean
+  onInitiateDescent: (coordinates: LandedCoordinates, location: string) => void
   onToggleRotation: () => void
 }) {
   const hasCoordinates =
@@ -42,9 +53,19 @@ function CoordinateOverlay({
     ? "Scanning topography..."
     : reverseGeocode.location
   const descentTarget = reverseGeocode.location ?? "Unknown Sector"
+  const descentDisabled =
+    isScanning || !hasCoordinates || descentState !== "idle"
 
   function handleInitiateDescent() {
-    console.log("Descent initiated to: ", descentTarget)
+    if (!hasCoordinates) return
+
+    onInitiateDescent(
+      {
+        latitude: coordinates.latitude,
+        longitude: coordinates.longitude,
+      },
+      descentTarget
+    )
   }
 
   return (
@@ -101,10 +122,12 @@ function CoordinateOverlay({
           <button
             type="button"
             className="pointer-events-auto mt-3 w-full rounded border border-emerald-300/45 bg-emerald-300/10 px-3 py-2 text-[11px] font-semibold tracking-[0.12em] text-emerald-100 uppercase transition-colors hover:border-emerald-200 hover:bg-emerald-300/20 disabled:cursor-wait disabled:border-white/15 disabled:bg-white/5 disabled:text-white/40"
-            disabled={isScanning}
+            disabled={descentDisabled}
             onClick={handleInitiateDescent}
           >
-            Initiate Descent To {descentTarget}
+            {descentState === "idle"
+              ? `Initiate Descent To ${descentTarget}`
+              : "Descent Sequence Active"}
           </button>
         </div>
       )}
@@ -115,76 +138,169 @@ function CoordinateOverlay({
 function Crosshair({ isLocked }: { isLocked: boolean }) {
   return (
     <div className="pointer-events-none absolute top-1/2 left-1/2 z-10 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center">
-      {/* Dynamic targeting reticle */}
       <div
         className={`relative flex h-8 w-8 items-center justify-center transition-colors duration-300 ${
           isLocked ? "scale-110 text-emerald-400" : "scale-100 text-white/40"
         }`}
       >
-        {/* Vertical Line */}
         <div className="absolute h-full w-[1px] bg-current" />
-        {/* Horizontal Line */}
         <div className="absolute h-[1px] w-full bg-current" />
-        {/* Center Target Dot */}
         <div className="absolute h-1.5 w-1.5 rounded-full bg-current" />
       </div>
     </div>
   )
 }
 
+function MapPlaceholder({
+  coordinates,
+}: {
+  coordinates: LandedCoordinates | null
+}) {
+  return (
+    <div className="flex h-screen w-screen items-center justify-center bg-zinc-900 px-6 text-center font-mono text-sm tracking-[0.16em] text-white uppercase">
+      MAP ENGINE INITIALIZED AT{" "}
+      {coordinates
+        ? `${coordinates.latitude.toFixed(6)}, ${coordinates.longitude.toFixed(6)}`
+        : "UNKNOWN COORDINATES"}
+    </div>
+  )
+}
+
 export default function App() {
   const earthRef = useRef<THREE.Mesh>(null)
+  const videoRef = useRef<HTMLVideoElement>(null)
+
   const [entryCoordinates, setEntryCoordinates] =
     useState<EntryCoordinates | null>(null)
   const [rotationPaused, setRotationPaused] = useState(false)
+  const [descentState, setDescentState] = useState<DescentState>("idle")
+  const [landedCoordinates, setLandedCoordinates] =
+    useState<LandedCoordinates | null>(null)
+  const [isVideoActive, setIsVideoActive] = useState(false)
+
   const isLocked = entryCoordinates?.maxZoomReached ?? false
+  const showPlanetaryScene = descentState !== "landed"
+  const showHud = descentState === "idle"
 
   function handleToggleRotation() {
     setRotationPaused((paused) => !paused)
   }
 
+  // 1. User clicks the button to start the 3D dive
+  function handleInitiateDescent(
+    coordinates: LandedCoordinates,
+    location: string
+  ) {
+    console.log("Descent initiated to: ", location)
+
+    setLandedCoordinates(coordinates)
+    setRotationPaused(true)
+    setDescentState("diving")
+  }
+
+  // 2. The 3D camera hits the atmosphere limit and triggers the video overlay
+  function handleDiveComplete() {
+    setDescentState("whiteout")
+    setIsVideoActive(true)
+
+    if (videoRef.current) {
+      videoRef.current.currentTime = 0
+      videoRef.current.play().catch(console.error)
+    }
+
+    // Wait 1 full second to guarantee the video is opaque before killing the 3D scene
+    setTimeout(() => {
+      setDescentState("landed")
+    }, 1000)
+  }
+
+  // 4. The video finishes playing and triggers this, fading out to reveal the Map!
+  function handleVideoEnded() {
+    setIsVideoActive(false)
+  }
+
   return (
     <main className="relative h-screen w-screen overflow-hidden bg-black">
-      <CoordinateOverlay
-        coordinates={entryCoordinates}
-        rotationPaused={rotationPaused}
-        onToggleRotation={handleToggleRotation}
-      />
-      <Crosshair isLocked={isLocked} />
-      <Canvas
-        camera={{ position: [3, 1.5, 5], fov: 45 }}
-        gl={{ logarithmicDepthBuffer: true }}
-        className="h-full w-full"
+      {/* --- LAYER 1: The Map Engine (Hidden until descentState === 'landed') --- */}
+      {!showPlanetaryScene && (
+        <MapPlaceholder coordinates={landedCoordinates} />
+      )}
+
+      {/* --- LAYER 2: The Cinematic Video Overlay --- */}
+      <div
+        className={`pointer-events-none absolute inset-0 z-50 bg-black transition-opacity duration-500 ease-in-out ${
+          isVideoActive ? "opacity-100" : "opacity-0"
+        }`}
       >
-        <Sun />
-        <Stars
-          radius={100}
-          depth={50}
-          count={5000}
-          factor={4}
-          saturation={0}
-          fade
-          speed={1}
+        <video
+          ref={videoRef}
+          src="/cloud-dive.mp4"
+          className="h-full w-full object-cover"
+          playsInline
+          muted
+          onEnded={handleVideoEnded}
         />
+      </div>
 
-        <Suspense fallback={null}>
-          <Earth earthRef={earthRef} rotationPaused={rotationPaused} />
-          <Moon />
-        </Suspense>
+      {/* --- LAYER 3: The 3D Space Engine (Unmounted when descentState === 'landed') --- */}
+      {showPlanetaryScene && (
+        <>
+          {showHud && (
+            <>
+              <CoordinateOverlay
+                coordinates={entryCoordinates}
+                descentState={descentState}
+                rotationPaused={rotationPaused}
+                onInitiateDescent={handleInitiateDescent}
+                onToggleRotation={handleToggleRotation}
+              />
+              <Crosshair isLocked={isLocked} />
+            </>
+          )}
+          <Canvas
+            camera={{ position: [3, 1.5, 5], fov: 45 }}
+            gl={{ logarithmicDepthBuffer: true }}
+            className="h-full w-full"
+          >
+            <Sun />
+            <Stars
+              radius={100}
+              depth={50}
+              count={5000}
+              factor={4}
+              saturation={0}
+              fade
+              speed={1}
+            />
 
-        <AtmosphericEntryTracker
-          earthRef={earthRef}
-          minDistance={ORBIT_MIN_DISTANCE}
-          setEntryCoordinates={setEntryCoordinates}
-        />
+            <Suspense fallback={null}>
+              <Earth earthRef={earthRef} rotationPaused={rotationPaused} />
+              <Moon />
+            </Suspense>
 
-        <OrbitControls
-          enableZoom={true}
-          enablePan={false}
-          minDistance={ORBIT_MIN_DISTANCE}
-          maxDistance={30}
-        />
-      </Canvas>
+            <AtmosphericEntryTracker
+              enabled={descentState === "idle"}
+              earthRef={earthRef}
+              minDistance={ORBIT_MIN_DISTANCE}
+              setEntryCoordinates={setEntryCoordinates}
+            />
+
+            {/* The 3D Camera zoom animator */}
+            <DescentCameraAnimator
+              descentState={descentState}
+              onDiveComplete={handleDiveComplete}
+            />
+
+            <OrbitControls
+              enabled={descentState === "idle"}
+              enableZoom={descentState === "idle"}
+              enablePan={false}
+              minDistance={ORBIT_MIN_DISTANCE}
+              maxDistance={30}
+            />
+          </Canvas>
+        </>
+      )}
     </main>
   )
 }
