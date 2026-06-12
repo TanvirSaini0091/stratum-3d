@@ -33,7 +33,7 @@ export function DescentCameraAnimator({
       completedRef.current = false
       startPosRef.current = null
       targetPosRef.current = null
-      
+
       // Gracefully reset FOV when returning to orbit
       if (baseFovRef.current && camera.fov !== baseFovRef.current) {
         camera.fov = THREE.MathUtils.lerp(camera.fov, baseFovRef.current, 0.05)
@@ -53,21 +53,26 @@ export function DescentCameraAnimator({
     }
 
     elapsedRef.current += delta
-    
+
     // Normalize time from 0 to 1
     const t = Math.min(elapsedRef.current / DIVE_TIMEOUT_SECONDS, 1.0)
     const easeT = easeInOutCubic(t)
 
     // 1. Move Camera with physical easing
-    camera.position.lerpVectors(startPosRef.current, targetPosRef.current!, easeT)
+    camera.position.lerpVectors(
+      startPosRef.current,
+      targetPosRef.current!,
+      easeT
+    )
     camera.lookAt(EARTH_CENTER)
 
     // 2. Optical FOV Shifting
     // Math.sin(t * PI) creates a perfect bell curve: 0 at start, 1 in middle, 0 at end
     const velocityCurve = Math.sin(t * Math.PI)
     const maxFovSpike = 120 // How extreme the tunnel vision gets
-    
-    camera.fov = baseFovRef.current! + (maxFovSpike - baseFovRef.current!) * velocityCurve
+
+    camera.fov =
+      baseFovRef.current! + (maxFovSpike - baseFovRef.current!) * velocityCurve
     camera.updateProjectionMatrix()
 
     const reachedTriggerDistance =

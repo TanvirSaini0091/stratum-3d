@@ -17,8 +17,16 @@ export function Earth({ earthRef, rotationPaused = false }: EarthProps) {
   const localEarthRef = useRef<THREE.Mesh>(null)
   const resolvedEarthRef = earthRef ?? localEarthRef
   const cloudsRef = useRef<THREE.Mesh>(null)
+  const hasRenderedRef = useRef(false)
 
   useFrame((_, delta) => {
+    // Dispatch an event on the very first frame so the global loader knows
+    // shader compilation and GPU upload are 100% complete.
+    if (!hasRenderedRef.current) {
+      hasRenderedRef.current = true
+      window.dispatchEvent(new CustomEvent("stratum-earth-rendered"))
+    }
+
     if (rotationPaused) return
 
     if (resolvedEarthRef.current)

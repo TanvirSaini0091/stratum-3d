@@ -13,7 +13,10 @@ const MAPTILER_KEY = import.meta.env.VITE_MAPTILER_KEY
 const MAPTILER_BASIC_STYLE = `https://api.maptiler.com/maps/basic-v2/style.json?key=${MAPTILER_KEY}`
 const MAPTILER_TERRAIN_URL = `https://api.maptiler.com/tiles/terrain-rgb-v2/tiles.json?key=${MAPTILER_KEY}`
 
-export function InteractiveMap({ coordinates, onReturnToOrbit }: InteractiveMapProps) {
+export function InteractiveMap({
+  coordinates,
+  onReturnToOrbit,
+}: InteractiveMapProps) {
   const mapRef = useRef<MapRef>(null)
   const [isMapLoaded, setIsMapLoaded] = useState(false)
   const [viewState, setViewState] = useState({
@@ -39,13 +42,17 @@ export function InteractiveMap({ coordinates, onReturnToOrbit }: InteractiveMapP
     })
 
     // Insert the layer beneath any symbol layer.
-    const layers = map.getStyle().layers;
-    let labelLayerId;
+    const layers = map.getStyle().layers
+    let labelLayerId
     if (layers) {
       for (let i = 0; i < layers.length; i++) {
-        if (layers[i].type === "symbol" && layers[i].layout && layers[i].layout["text-field"]) {
-          labelLayerId = layers[i].id;
-          break;
+        if (
+          layers[i].type === "symbol" &&
+          layers[i].layout &&
+          layers[i].layout["text-field"]
+        ) {
+          labelLayerId = layers[i].id
+          break
         }
       }
     }
@@ -70,16 +77,21 @@ export function InteractiveMap({ coordinates, onReturnToOrbit }: InteractiveMapP
             "interpolate",
             ["linear"],
             ["get", "render_height"],
-            0, "lightgray",
-            200, "royalblue",
-            400, "lightblue",
+            0,
+            "lightgray",
+            200,
+            "royalblue",
+            400,
+            "lightblue",
           ],
           "fill-extrusion-height": [
             "interpolate",
             ["linear"],
             ["zoom"],
-            15, 0,
-            16, ["get", "render_height"],
+            15,
+            0,
+            16,
+            ["get", "render_height"],
           ],
           "fill-extrusion-base": [
             "case",
@@ -91,8 +103,8 @@ export function InteractiveMap({ coordinates, onReturnToOrbit }: InteractiveMapP
       },
       labelLayerId
     )
-    
-    // Give the heavy 3D tiles 2.5 full seconds to download 
+
+    // Give the heavy 3D tiles 2.5 full seconds to download
     // and paint to the canvas in the background before we lift the black curtain.
     setTimeout(() => {
       setIsMapLoaded(true)
@@ -101,20 +113,19 @@ export function InteractiveMap({ coordinates, onReturnToOrbit }: InteractiveMapP
 
   return (
     <div className="relative h-screen w-screen bg-zinc-950">
-      
       {/* Ascent HUD - Smoothly fades in only AFTER the map is visible */}
-      <div 
-        className="absolute left-4 top-4 z-[100] pointer-events-none"
+      <div
+        className="pointer-events-none absolute top-4 left-4 z-[100]"
         style={{
           opacity: isMapLoaded ? 1 : 0,
           pointerEvents: isMapLoaded ? "auto" : "none",
-          transition: "opacity 1.5s ease-in-out"
+          transition: "opacity 1.5s ease-in-out",
         }}
       >
         <button
           type="button"
           onClick={onReturnToOrbit}
-          className="cursor-pointer group flex items-center gap-2 rounded-md border border-white/15 bg-black/65 px-4 py-2.5 font-mono text-xs font-semibold uppercase tracking-[0.12em] text-white shadow-xl backdrop-blur-md transition-all hover:bg-black/90 hover:border-zinc-400 hover:shadow-2xl"
+          className="group flex cursor-pointer items-center gap-2 rounded-md border border-white/15 bg-black/65 px-4 py-2.5 font-mono text-xs font-semibold tracking-[0.12em] text-white uppercase shadow-xl backdrop-blur-md transition-all hover:border-zinc-400 hover:bg-black/90 hover:shadow-2xl"
         >
           <ChevronUp className="h-4 w-4 transition-transform group-hover:-translate-y-0.5" />
           Return to Orbit
@@ -122,19 +133,19 @@ export function InteractiveMap({ coordinates, onReturnToOrbit }: InteractiveMapP
       </div>
 
       {/* Cinematic Loading HUD - Uses inline styles to guarantee a silky 1.5s fade out */}
-      <div 
+      <div
         className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-zinc-950 text-white"
         style={{
           opacity: isMapLoaded ? 0 : 1,
           visibility: isMapLoaded ? "hidden" : "visible",
-          transition: "opacity 1.5s ease-in-out, visibility 1.5s ease-in-out"
+          transition: "opacity 1.5s ease-in-out, visibility 1.5s ease-in-out",
         }}
       >
         <div className="relative flex h-12 w-12 items-center justify-center">
           <div className="absolute h-full w-full animate-spin rounded-full border-2 border-emerald-500/20 border-t-emerald-400" />
           <div className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
         </div>
-        <div className="mt-6 animate-pulse font-mono text-xs font-semibold uppercase tracking-[0.2em] text-emerald-400/80">
+        <div className="mt-6 animate-pulse font-mono text-xs font-semibold tracking-[0.2em] text-emerald-400/80 uppercase">
           Calibrating Topography...
         </div>
         <div className="mt-2 font-mono text-[10px] tracking-widest text-zinc-500">
