@@ -1,12 +1,14 @@
 import { Suspense, useRef, useState } from "react"
 import { Canvas } from "@react-three/fiber"
-import { OrbitControls, Stars } from "@react-three/drei"
+import { OrbitControls, Stars, Html, useProgress } from "@react-three/drei"
 import { Pause, Play } from "lucide-react"
 import * as THREE from "three"
 import { DescentCameraAnimator } from "./components/DescentCameraAnimator"
+import { AtmosphericSpeedLines } from "./components/AtmosphericSpeedLines"
 import { Earth } from "./components/Earth"
 import { Moon } from "./components/Moon"
 import { Sun } from "./components/Sun"
+import { InteractiveMap } from "./components/InteractiveMap"
 import {
   AtmosphericEntryTracker,
   type EntryCoordinates,
@@ -151,32 +153,35 @@ function Crosshair({ isLocked }: { isLocked: boolean }) {
   )
 }
 
-function MapPlaceholder({
-  coordinates,
-}: {
-  coordinates: LandedCoordinates | null
-}) {
+function SceneLoader() {
+  const { progress } = useProgress()
+  
   return (
-    <div className="flex h-screen w-screen items-center justify-center bg-zinc-900 px-6 text-center font-mono text-sm tracking-[0.16em] text-white uppercase">
-      MAP ENGINE INITIALIZED AT{" "}
-      {coordinates
-        ? `${coordinates.latitude.toFixed(6)}, ${coordinates.longitude.toFixed(6)}`
-        : "UNKNOWN COORDINATES"}
-    </div>
+    <Html center>
+      <div className="pointer-events-none flex flex-col items-center justify-center w-64">
+        <div className="relative flex h-12 w-12 items-center justify-center">
+          <div className="absolute h-full w-full animate-spin rounded-full border-2 border-emerald-500/20 border-t-emerald-400" />
+          <div className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+        </div>
+        <div className="mt-6 animate-pulse font-mono text-xs font-semibold uppercase tracking-[0.2em] text-emerald-400/80 text-center">
+          Establishing Uplink... {progress.toFixed(0)}%
+        </div>
+      </div>
+    </Html>
   )
 }
 
 export default function App() {
   const earthRef = useRef<THREE.Mesh>(null)
-  const videoRef = useRef<HTMLVideoElement>(null)
 
-  const [entryCoordinates, setEntryCoordinates] =
-    useState<EntryCoordinates | null>(null)
+  const [entryCoordinates, setEntryCoordinates] = useState<EntryCoordinates | null>(null)
   const [rotationPaused, setRotationPaused] = useState(false)
   const [descentState, setDescentState] = useState<DescentState>("idle")
-  const [landedCoordinates, setLandedCoordinates] =
-    useState<LandedCoordinates | null>(null)
-  const [isVideoActive, setIsVideoActive] = useState(false)
+  const [landedCoordinates, setLandedCoordinates] = useState<LandedCoordinates | null>(null)
+  
+  // Controls the pure-CSS overlay visibility independently from component mount cycle
+  const [isOverlayVisible, setIsOverlayVisible] = useState(false)
+  const [isReturning, setIsReturning] = useState(false)
 
   const isLocked = entryCoordinates?.maxZoomReached ?? false
   const showPlanetaryScene = descentState !== "landed"
@@ -186,63 +191,79 @@ export default function App() {
     setRotationPaused((paused) => !paused)
   }
 
-  // 1. User clicks the button to start the 3D dive
-  function handleInitiateDescent(
-    coordinates: LandedCoordinates,
-    location: string
-  ) {
+  function handleInitiateDescent(coordinates: LandedCoordinates, location: string) {
     console.log("Descent initiated to: ", location)
-
     setLandedCoordinates(coordinates)
     setRotationPaused(true)
     setDescentState("diving")
   }
 
-  // 2. The 3D camera hits the atmosphere limit and triggers the video overlay
+  // --- REFACTORED: Programmatic Descent Transition ---
   function handleDiveComplete() {
     setDescentState("whiteout")
-    setIsVideoActive(true)
+    setIsOverlayVisible(true) // Turn screen fully opaque white
 
-    if (videoRef.current) {
-      videoRef.current.currentTime = 0
-      videoRef.current.play().catch(console.error)
-    }
-
-    // Wait 1 full second to guarantee the video is opaque before killing the 3D scene
+    // Wait 500ms for the CSS fade-to-white transition to completely finish
     setTimeout(() => {
-      setDescentState("landed")
-    }, 1000)
+      setDescentState("landed") // Unmount 3D space scene, mount Map canvas
+      
+      // Let the Map engine initialize, then fade out the white overlay
+      setTimeout(() => {
+        setIsOverlayVisible(false)
+      }, 300)
+    }, 500)
   }
 
-  // 4. The video finishes playing and triggers this, fading out to reveal the Map!
-  function handleVideoEnded() {
-    setIsVideoActive(false)
+  // --- Ascent Logic ---
+  function handleReturnToOrbit() {
+    console.log("Executing return sequence... Fading to black.")
+    setIsReturning(true)
+
+    setTimeout(() => {
+      console.log("Swapping engines in the background...")
+      setDescentState("idle")
+      setEntryCoordinates(null)
+      setLandedCoordinates(null)
+      setRotationPaused(false) 
+
+      setTimeout(() => {
+        console.log("Revealing 3D Space!")
+        setIsReturning(false)
+      }, 1500) // Give WebGL time to compile shaders and mount before dropping curtain
+    }, 700) // Matches CSS transition duration
   }
 
   return (
     <main className="relative h-screen w-screen overflow-hidden bg-black">
-      {/* --- LAYER 1: The Map Engine (Hidden until descentState === 'landed') --- */}
-      {!showPlanetaryScene && (
-        <MapPlaceholder coordinates={landedCoordinates} />
+      
+      {/* --- LAYER 1: The Map Engine --- */}
+      {!showPlanetaryScene && landedCoordinates && (
+        <InteractiveMap 
+          coordinates={landedCoordinates} 
+          onReturnToOrbit={handleReturnToOrbit}
+        />
       )}
 
-      {/* --- LAYER 2: The Cinematic Video Overlay --- */}
+      {/* --- LAYER 2: Pure Code/CSS Transition Overlays --- */}
       <div
-        className={`pointer-events-none absolute inset-0 z-50 bg-black transition-opacity duration-500 ease-in-out ${
-          isVideoActive ? "opacity-100" : "opacity-0"
-        }`}
+        className={`pointer-events-none absolute inset-0 z-[200] flex items-center justify-center transition-all cubic-bezier(0.4, 0, 0.2, 1) ${
+          isOverlayVisible || isReturning ? "opacity-100" : "opacity-0"
+        } ${isReturning ? "bg-black duration-700" : "bg-white duration-500"}`} 
       >
-        <video
-          ref={videoRef}
-          src="/cloud-dive.mp4"
-          className="h-full w-full object-cover"
-          playsInline
-          muted
-          onEnded={handleVideoEnded}
-        />
+        {isReturning && (
+          <div className="flex flex-col items-center justify-center text-white">
+            <div className="relative flex h-12 w-12 items-center justify-center">
+              <div className="absolute h-full w-full animate-spin rounded-full border-2 border-emerald-500/20 border-t-emerald-400" />
+              <div className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+            </div>
+            <div className="mt-6 animate-pulse font-mono text-xs font-semibold uppercase tracking-[0.2em] text-emerald-400/80 text-center">
+              Re-establishing Orbital Link...
+            </div>
+          </div>
+        )}
       </div>
 
-      {/* --- LAYER 3: The 3D Space Engine (Unmounted when descentState === 'landed') --- */}
+      {/* --- LAYER 3: The 3D Space Engine --- */}
       {showPlanetaryScene && (
         <>
           {showHud && (
@@ -273,7 +294,7 @@ export default function App() {
               speed={1}
             />
 
-            <Suspense fallback={null}>
+            <Suspense fallback={<SceneLoader />}>
               <Earth earthRef={earthRef} rotationPaused={rotationPaused} />
               <Moon />
             </Suspense>
@@ -285,11 +306,12 @@ export default function App() {
               setEntryCoordinates={setEntryCoordinates}
             />
 
-            {/* The 3D Camera zoom animator */}
             <DescentCameraAnimator
               descentState={descentState}
               onDiveComplete={handleDiveComplete}
             />
+
+            <AtmosphericSpeedLines descentState={descentState} />
 
             <OrbitControls
               enabled={descentState === "idle"}

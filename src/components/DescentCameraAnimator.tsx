@@ -9,11 +9,13 @@ type DescentCameraAnimatorProps = {
 }
 
 const EARTH_CENTER = new THREE.Vector3(0, 0, 0)
-// Slower, more cinematic descent speed
-const DIVE_SPEED = 2.0
 const DIVE_TIMEOUT_SECONDS = 3.5
-// Triggers the video BEFORE clipping into the Earth
 const VIDEO_TRIGGER_DISTANCE = 2.2
+
+// Smooth ease-in-out curve for cinematic acceleration and deceleration
+function easeInOutCubic(x: number): number {
+  return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2
+}
 
 export function DescentCameraAnimator({
   descentState,
@@ -21,31 +23,52 @@ export function DescentCameraAnimator({
 }: DescentCameraAnimatorProps) {
   const elapsedRef = useRef(0)
   const completedRef = useRef(false)
-  const targetRef = useRef<THREE.Vector3 | null>(null)
+  const startPosRef = useRef<THREE.Vector3 | null>(null)
+  const targetPosRef = useRef<THREE.Vector3 | null>(null)
+  const baseFovRef = useRef<number | null>(null)
 
   useFrame(({ camera }, delta) => {
     if (descentState !== "diving") {
       elapsedRef.current = 0
       completedRef.current = false
-      targetRef.current = null
+      startPosRef.current = null
+      targetPosRef.current = null
+      
+      // Gracefully reset FOV when returning to orbit
+      if (baseFovRef.current && camera.fov !== baseFovRef.current) {
+        camera.fov = THREE.MathUtils.lerp(camera.fov, baseFovRef.current, 0.05)
+        camera.updateProjectionMatrix()
+      }
       return
     }
 
-    if (!targetRef.current) {
-      // Lock the target strictly to the outer atmosphere layer (2.02)
-      // This guarantees the camera NEVER clips inside the planet to see the stars
-      targetRef.current = camera.position
+    // Capture exact starting positions on frame 1 of the dive
+    if (!startPosRef.current) {
+      startPosRef.current = camera.position.clone()
+      baseFovRef.current = camera.fov
+      targetPosRef.current = camera.position
         .clone()
         .normalize()
         .multiplyScalar(2.02)
     }
 
     elapsedRef.current += delta
+    
+    // Normalize time from 0 to 1
+    const t = Math.min(elapsedRef.current / DIVE_TIMEOUT_SECONDS, 1.0)
+    const easeT = easeInOutCubic(t)
 
-    // Exponential lerp creates a beautiful "easing" effect as it approaches the clouds
-    const lerpFactor = 1 - Math.exp(-DIVE_SPEED * delta)
-    camera.position.lerp(targetRef.current, lerpFactor)
+    // 1. Move Camera with physical easing
+    camera.position.lerpVectors(startPosRef.current, targetPosRef.current!, easeT)
     camera.lookAt(EARTH_CENTER)
+
+    // 2. Optical FOV Shifting
+    // Math.sin(t * PI) creates a perfect bell curve: 0 at start, 1 in middle, 0 at end
+    const velocityCurve = Math.sin(t * Math.PI)
+    const maxFovSpike = 120 // How extreme the tunnel vision gets
+    
+    camera.fov = baseFovRef.current! + (maxFovSpike - baseFovRef.current!) * velocityCurve
+    camera.updateProjectionMatrix()
 
     const reachedTriggerDistance =
       camera.position.distanceTo(EARTH_CENTER) <= VIDEO_TRIGGER_DISTANCE
