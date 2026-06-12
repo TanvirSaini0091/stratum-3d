@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react"
-import { useFrame, useThree } from "@react-three/fiber"
+import { useFrame } from "@react-three/fiber"
 import { Html, Billboard } from "@react-three/drei"
 import * as THREE from "three"
 import type { DescentState } from "../types/descent"
@@ -53,10 +53,7 @@ interface StarfieldProps {
 
 const Starfield: React.FC<StarfieldProps> = ({
   starColor = "rgba(255,255,255,1)",
-  mouseAdjust = false,
-  tiltAdjust = false,
   easing = 1,
-  clickToWarp = false,
   hyperspace = false,
   warpFactor = 10,
   speed = 1,

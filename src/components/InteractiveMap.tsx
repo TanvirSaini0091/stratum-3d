@@ -46,12 +46,14 @@ export function InteractiveMap({
     let labelLayerId
     if (layers) {
       for (let i = 0; i < layers.length; i++) {
+        const layer = layers[i]
+        // Use the 'in' operator to safely check for layout properties
         if (
-          layers[i].type === "symbol" &&
-          layers[i].layout &&
-          layers[i].layout["text-field"]
+          layer.type === "symbol" &&
+          layer.layout &&
+          "text-field" in layer.layout
         ) {
-          labelLayerId = layers[i].id
+          labelLayerId = layer.id
           break
         }
       }

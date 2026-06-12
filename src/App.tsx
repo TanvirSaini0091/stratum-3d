@@ -1,6 +1,6 @@
 import { Suspense, useCallback, useEffect, useRef, useState } from "react"
 import { Canvas, useThree } from "@react-three/fiber"
-import { OrbitControls, Stars, Html, useProgress } from "@react-three/drei"
+import { OrbitControls, Stars, useProgress } from "@react-three/drei"
 import { Pause, Play } from "lucide-react"
 import * as THREE from "three"
 import gsap from "gsap"
@@ -245,7 +245,7 @@ function Crosshair({ isLocked }: { isLocked: boolean }) {
 }
 
 function GlobalLoader() {
-  const { progress, active, total } = useProgress()
+  const { progress, total } = useProgress()
   const [show, setShow] = useState(true)
   const [earthRendered, setEarthRendered] = useState(false)
 

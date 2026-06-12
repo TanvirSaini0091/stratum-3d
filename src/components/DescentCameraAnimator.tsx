@@ -27,7 +27,8 @@ export function DescentCameraAnimator({
   const targetPosRef = useRef<THREE.Vector3 | null>(null)
   const baseFovRef = useRef<number | null>(null)
 
-  useFrame(({ camera }, delta) => {
+  useFrame((state, delta) => {
+    const camera = state.camera as THREE.PerspectiveCamera
     if (descentState !== "diving") {
       elapsedRef.current = 0
       completedRef.current = false
