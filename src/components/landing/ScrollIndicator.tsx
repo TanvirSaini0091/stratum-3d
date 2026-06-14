@@ -16,6 +16,7 @@ export function ScrollIndicator({ visible }: ScrollIndicatorProps) {
   return (
     <div
       ref={containerRef}
+      data-tutorial="scroll"
       className="pointer-events-none absolute bottom-8 left-1/2 z-20 flex -translate-x-1/2 flex-col items-center gap-3 transition-opacity duration-700"
       style={{ opacity: 0 }}
     >

@@ -25,12 +25,21 @@ import { AboutSection } from "./components/landing/AboutSection"
 import { TechSection } from "./components/landing/TechSection"
 import { FutureSection } from "./components/landing/FutureSection"
 import { Footer } from "./components/landing/Footer"
+import { MobileHud } from "./components/landing/MobileHud"
 import { ChevronUp, ChevronDown } from "lucide-react"
+import {
+  OnboardingTutorial,
+  TutorialHelpButton,
+  hasCompletedOnboarding,
+  markOnboardingComplete,
+} from "./components/OnboardingTutorial"
+import { MobileScrollHandle } from "./components/MobileScrollHandle"
 
 gsap.registerPlugin(ScrollTrigger)
 
 const ORBIT_MIN_DISTANCE = 3.5
 const ORBIT_MAX_DISTANCE = 30
+const MOBILE_BREAKPOINT = 768
 
 type LandedCoordinates = {
   latitude: number
@@ -130,7 +139,10 @@ function CoordinateOverlay({
   }
 
   return (
-    <div className="pointer-events-auto absolute top-4 left-4 z-10 w-[min(22rem,calc(100vw-2rem))] rounded-md border border-white/15 bg-black/65 font-mono text-xs text-white shadow-xl backdrop-blur-md transition-all duration-300">
+    <div
+      data-tutorial="coordinates"
+      className="pointer-events-auto absolute top-4 left-4 z-10 w-[min(22rem,calc(100vw-2rem))] rounded-md border border-white/15 bg-black/65 font-mono text-xs text-white shadow-xl backdrop-blur-md transition-all duration-300"
+    >
       {/* Header / Toggle */}
       <button
         type="button"
@@ -192,12 +204,14 @@ function CoordinateOverlay({
         </button>
 
         {/* Zoom Slider — replaces scroll-to-zoom in orbit view */}
-        <ZoomSlider
-          value={cameraDistance}
-          min={ORBIT_MIN_DISTANCE}
-          max={ORBIT_MAX_DISTANCE}
-          onChange={onZoomChange}
-        />
+        <div data-tutorial="zoom">
+          <ZoomSlider
+            value={cameraDistance}
+            min={ORBIT_MIN_DISTANCE}
+            max={ORBIT_MAX_DISTANCE}
+            onChange={onZoomChange}
+          />
+        </div>
 
         {isLocked && (
           <div className="mt-4 border-t border-white/10 pt-3">
@@ -304,7 +318,7 @@ function GlobalLoader() {
 
 function HeroTitle() {
   return (
-    <div className="pointer-events-none absolute right-6 bottom-24 z-10 text-right md:right-12">
+    <div className="pointer-events-none absolute right-6 bottom-36 z-10 text-right sm:bottom-24 md:right-12">
       <h1 className="font-heading text-4xl leading-none font-bold tracking-tight text-white/90 md:text-6xl lg:text-7xl">
         Stratum
         <span className="text-stratum-emerald">3D</span>
@@ -332,14 +346,35 @@ export default function App() {
   const [landedCoordinates, setLandedCoordinates] =
     useState<LandedCoordinates | null>(null)
   const [cameraDistance, setCameraDistance] = useState(8.8) // Default 80% zoom
+  const [isMobile, setIsMobile] = useState(
+    () => typeof window !== "undefined" && window.innerWidth < MOBILE_BREAKPOINT
+  )
 
   // Controls the pure-CSS overlay visibility independently from component mount cycle
   const [isOverlayVisible, setIsOverlayVisible] = useState(false)
   const [isReturning, setIsReturning] = useState(false)
+  const [showTutorial, setShowTutorial] = useState(false)
 
   const isLocked = entryCoordinates?.maxZoomReached ?? false
   const showPlanetaryScene = descentState !== "landed"
   const showHud = descentState === "idle"
+
+  // --- Detect mobile viewport for touch-scroll fix ---
+  useEffect(() => {
+    function handleResize() {
+      setIsMobile(window.innerWidth < MOBILE_BREAKPOINT)
+    }
+    window.addEventListener("resize", handleResize)
+    return () => window.removeEventListener("resize", handleResize)
+  }, [])
+
+  // --- Auto-start onboarding tutorial for first-time visitors ---
+  useEffect(() => {
+    if (!hasCompletedOnboarding()) {
+      const timer = setTimeout(() => setShowTutorial(true), 2500)
+      return () => clearTimeout(timer)
+    }
+  }, [])
 
   // --- GSAP ScrollTrigger: Pin hero and reveal content sections ---
   useEffect(() => {
@@ -380,6 +415,11 @@ export default function App() {
 
   const handleZoomChange = useCallback((distance: number) => {
     setCameraDistance(distance)
+  }, [])
+
+  const handleTutorialComplete = useCallback(() => {
+    setShowTutorial(false)
+    markOnboardingComplete()
   }, [])
 
   function handleInitiateDescent(
@@ -463,6 +503,13 @@ export default function App() {
     <div ref={mainRef} className="relative bg-stratum-black">
       <GlobalLoader />
 
+      {/* ── Onboarding Tutorial ── */}
+      <OnboardingTutorial
+        isActive={showTutorial}
+        isMobile={isMobile}
+        onComplete={handleTutorialComplete}
+      />
+
       {/* ── Transition Overlay (always on top) ── */}
       <div
         className={`cubic-bezier(0.4, 0, 0.2, 1) pointer-events-none fixed inset-0 z-[200] flex items-center justify-center transition-all ${
@@ -483,21 +530,49 @@ export default function App() {
       </div>
 
       {/* ── HERO SECTION: 3D Canvas ── */}
-      <div ref={heroRef} className="relative h-screen w-full overflow-hidden">
+      <div
+        ref={heroRef}
+        data-tutorial="canvas"
+        className="relative h-screen w-full overflow-hidden"
+      >
         {showHud && (
           <>
-            <CoordinateOverlay
-              coordinates={entryCoordinates}
-              descentState={descentState}
-              rotationPaused={rotationPaused}
-              cameraDistance={cameraDistance}
-              onInitiateDescent={handleInitiateDescent}
-              onToggleRotation={handleToggleRotation}
-              onZoomChange={handleZoomChange}
-            />
+            {isMobile ? (
+              <MobileHud
+                coordinates={entryCoordinates}
+                descentState={descentState}
+                rotationPaused={rotationPaused}
+                cameraDistance={cameraDistance}
+                minDistance={ORBIT_MIN_DISTANCE}
+                maxDistance={ORBIT_MAX_DISTANCE}
+                onInitiateDescent={handleInitiateDescent}
+                onToggleRotation={handleToggleRotation}
+                onZoomChange={handleZoomChange}
+              />
+            ) : (
+              <CoordinateOverlay
+                coordinates={entryCoordinates}
+                descentState={descentState}
+                rotationPaused={rotationPaused}
+                cameraDistance={cameraDistance}
+                onInitiateDescent={handleInitiateDescent}
+                onToggleRotation={handleToggleRotation}
+                onZoomChange={handleZoomChange}
+              />
+            )}
             <Crosshair isLocked={isLocked} />
             <HeroTitle />
-            <ScrollIndicator visible={descentState === "idle"} />
+            {/* Show standard indicator on desktop, Draggable handle on mobile */}
+            {isMobile ? (
+              <MobileScrollHandle />
+            ) : (
+              <ScrollIndicator visible={descentState === "idle" && !isLocked} />
+            )}
+            {!showTutorial && (
+              <div className="absolute right-4 bottom-8 z-10">
+                <TutorialHelpButton onClick={() => setShowTutorial(true)} />
+              </div>
+            )}
           </>
         )}
 

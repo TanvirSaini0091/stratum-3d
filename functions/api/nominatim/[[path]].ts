@@ -7,7 +7,7 @@ export async function onRequest({ request }) {
     const response = await fetch(targetUrl, {
       method: request.method,
       headers: {
-        "User-Agent": "Stratus3D/0.0.1",
+        "User-Agent": "Stratum3D/0.0.1",
         Accept: "application/json",
       },
     })
