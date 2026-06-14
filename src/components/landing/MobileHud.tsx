@@ -1,5 +1,6 @@
 import { useState, type ChangeEvent } from "react"
 import { MapPin, Pause, Play, ZoomIn, ZoomOut, Navigation } from "lucide-react"
+import { useTranslation } from "react-i18next"
 import type { EntryCoordinates } from "../AtmosphericEntryTracker"
 import type { DescentState } from "../../types/descent"
 import { useReverseGeocode } from "../../hooks/useReverseGeocode"
@@ -30,6 +31,7 @@ export function MobileHud({
   onToggleRotation,
   onZoomChange,
 }: MobileHudProps) {
+  const { t } = useTranslation()
   const [isPillExpanded, setIsPillExpanded] = useState(false)
 
   const hasCoordinates =
@@ -47,8 +49,8 @@ export function MobileHud({
     (reverseGeocode.isLoading ||
       reverseGeocode.status === "scanning" ||
       !reverseGeocode.location)
-  const locationLabel = isScanning ? "Scanning..." : reverseGeocode.location
-  const descentTarget = reverseGeocode.location ?? "Unknown Sector"
+  const locationLabel = isScanning ? t("hud.scanning") : reverseGeocode.location
+  const descentTarget = reverseGeocode.location ?? t("hud.unknownSector")
   const descentDisabled =
     isScanning || !hasCoordinates || descentState !== "idle"
 
@@ -95,7 +97,7 @@ export function MobileHud({
               {coordinates.longitude.toFixed(4)}°
             </span>
           ) : (
-            <span className="text-white/30">Awaiting lock</span>
+            <span className="text-white/30">{t("hud.awaitingLock")}</span>
           )}
         </button>
 
@@ -108,7 +110,7 @@ export function MobileHud({
           }`}
         >
           <div className="text-[9px] tracking-[0.15em] text-white/30 uppercase">
-            Resolved Location
+            {t("hud.resolvedLocation")}
           </div>
           <div className="mt-0.5 whitespace-nowrap text-white/85">
             {locationLabel}
@@ -145,7 +147,7 @@ export function MobileHud({
           type="button"
           onClick={onToggleRotation}
           className="flex h-10 w-10 items-center justify-center rounded-full border border-white/12 bg-black/50 text-white/65 shadow-lg backdrop-blur-md transition-all active:scale-90"
-          aria-label={rotationPaused ? "Resume rotation" : "Pause rotation"}
+          aria-label={rotationPaused ? t("hud.resumeRotation") : t("hud.stopRotation")}
         >
           {rotationPaused ? (
             <Play className="h-4 w-4 translate-x-[1px]" />
@@ -165,7 +167,7 @@ export function MobileHud({
             onClick={handleInitiateDescent}
           >
             <Navigation className="h-4 w-4" />
-            {descentState === "idle" ? "Initiate Descent" : "Descent Active"}
+            {descentState === "idle" ? t("hud.initiateDescent") : t("hud.descentActive")}
           </button>
 
           {/* Wrapped the location text in a dark blur pill for readability */}
@@ -180,7 +182,7 @@ export function MobileHud({
       {!isLocked && (
         <div className="pointer-events-none absolute right-0 bottom-20 left-0 text-center">
           <span className="inline-block rounded-full border border-stratum-amber/12 bg-black/35 px-3 py-1.5 font-mono text-[9px] tracking-wider text-stratum-amber/50 backdrop-blur-sm">
-            Zoom to max to lock coordinates
+            {t("hud.zoomToMaxToLock")}
           </span>
         </div>
       )}

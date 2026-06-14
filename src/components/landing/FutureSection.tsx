@@ -1,45 +1,20 @@
 import { useEffect, useRef } from "react"
 import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
+import { useTranslation } from "react-i18next"
 
 gsap.registerPlugin(ScrollTrigger)
 
-type RoadmapItem = {
-  phase: string
-  title: string
-  description: string
+type RoadmapItemKey = {
+  key: string
   status: "complete" | "in-progress" | "planned" | "postponed"
 }
 
-const ROADMAP: RoadmapItem[] = [
-  {
-    phase: "Phase I",
-    title: "Orbital Mechanics",
-    description:
-      "Realistic Earth rendering with axial tilt, cloud layers, night-side illumination, and full orbital camera controls.",
-    status: "complete",
-  },
-  {
-    phase: "Phase II",
-    title: "Atmospheric Descent",
-    description:
-      "Cinematic dive sequence with FOV warping, speed lines, warp tunnel shader, and seamless transition to the map engine.",
-    status: "complete",
-  },
-  {
-    phase: "Phase III",
-    title: "Landing Page & Presentation",
-    description:
-      "Scroll-driven landing page with GSAP animations, zoom slider controls, and polished section architecture.",
-    status: "complete",
-  },
-  {
-    phase: "Phase IV",
-    title: "Friend Location System",
-    description:
-      "Real-time location sharing on the 3D globe. Mark distance and draw connection lines between you and your friends' orbital coordinates.",
-    status: "planned",
-  },
+const ROADMAP_KEYS: RoadmapItemKey[] = [
+  { key: "PhaseI", status: "complete" },
+  { key: "PhaseII", status: "complete" },
+  { key: "PhaseIII", status: "complete" },
+  { key: "PhaseIV", status: "planned" },
 ]
 
 const STATUS_STYLES = {
@@ -67,6 +42,7 @@ const STATUS_STYLES = {
 }
 
 export function FutureSection() {
+  const { t } = useTranslation()
   const sectionRef = useRef<HTMLElement>(null)
   const itemsRef = useRef<HTMLDivElement>(null)
 
@@ -124,24 +100,24 @@ export function FutureSection() {
           <div className="mb-8 flex items-center gap-4">
             <div className="h-px w-12 bg-stratum-emerald" />
             <span className="font-heading text-[11px] font-bold tracking-[0.3em] text-stratum-emerald uppercase">
-              03 — Roadmap
+              {t("future.label")}
             </span>
           </div>
 
           <h2 className="font-heading text-4xl leading-tight font-bold tracking-tight text-stratum-text md:text-5xl">
-            What&rsquo;s next
+            {t("future.heading1")}
             <br />
-            <span className="text-stratum-text-dim">on the horizon.</span>
+            <span className="text-stratum-text-dim">{t("future.heading2")}</span>
           </h2>
         </div>
 
         <div ref={itemsRef} className="space-y-6">
-          {ROADMAP.map((item) => {
+          {ROADMAP_KEYS.map((item) => {
             const style = STATUS_STYLES[item.status]
 
             return (
               <div
-                key={item.phase}
+                key={item.key}
                 className="roadmap-item group flex gap-6 rounded-lg border border-stratum-border/30 bg-stratum-surface/20 p-6 transition-all duration-300 hover:border-stratum-border/60 hover:bg-stratum-surface/40"
               >
                 {/* Timeline dot */}
@@ -154,19 +130,19 @@ export function FutureSection() {
                 <div className="flex-1">
                   <div className="mb-2 flex flex-wrap items-center gap-3">
                     <span className="font-heading text-[10px] font-bold tracking-[0.2em] text-stratum-text-dim uppercase">
-                      {item.phase}
+                      {t(`future.items.${item.key}.phase`)}
                     </span>
                     <span
                       className={`rounded-full border px-2 py-0.5 text-[9px] font-semibold tracking-wider uppercase ${style.badge}`}
                     >
-                      {style.label}
+                      {t(`future.status.${item.status}`)}
                     </span>
                   </div>
                   <h3 className="font-heading text-xl font-bold text-stratum-text">
-                    {item.title}
+                    {t(`future.items.${item.key}.title`)}
                   </h3>
                   <p className="mt-2 text-sm leading-relaxed text-stratum-text-dim">
-                    {item.description}
+                    {t(`future.items.${item.key}.description`)}
                   </p>
                 </div>
               </div>

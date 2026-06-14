@@ -1,55 +1,26 @@
 import { useEffect, useRef } from "react"
 import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
+import { useTranslation } from "react-i18next"
 
 gsap.registerPlugin(ScrollTrigger)
 
-type TechItem = {
+type TechItemKey = {
   name: string
-  category: string
-  description: string
+  key: string
 }
 
-const TECHNOLOGIES: TechItem[] = [
-  {
-    name: "Three.js",
-    category: "3D Engine",
-    description:
-      "WebGL-powered 3D rendering with custom GLSL shaders for night-side illumination and atmospheric effects.",
-  },
-  {
-    name: "React Three Fiber",
-    category: "Declarative 3D",
-    description:
-      "React renderer for Three.js enabling a component-driven architecture for the entire orbital scene.",
-  },
-  {
-    name: "MapLibre GL",
-    category: "Cartography",
-    description:
-      "Open-source vector tile engine with 3D terrain extrusion and building geometry for surface inspection.",
-  },
-  {
-    name: "GSAP",
-    category: "Animation",
-    description:
-      "ScrollTrigger-powered transitions for the landing page. Precise easing curves for cinematic motion.",
-  },
-  {
-    name: "Vite",
-    category: "Build Tool",
-    description:
-      "Lightning-fast HMR and optimized production builds with native ESM support.",
-  },
-  {
-    name: "TypeScript",
-    category: "Language",
-    description:
-      "End-to-end type safety across the 3D scene graph, map engine, and UI layer.",
-  },
+const TECHNOLOGIES_KEYS: TechItemKey[] = [
+  { name: "Three.js", key: "ThreeJs" },
+  { name: "React Three Fiber", key: "ReactThreeFiber" },
+  { name: "MapLibre GL", key: "MapLibreGL" },
+  { name: "GSAP", key: "GSAP" },
+  { name: "Vite", key: "Vite" },
+  { name: "TypeScript", key: "TypeScript" },
 ]
 
 export function TechSection() {
+  const { t } = useTranslation()
   const sectionRef = useRef<HTMLElement>(null)
   const cardsRef = useRef<HTMLDivElement>(null)
 
@@ -107,14 +78,14 @@ export function TechSection() {
           <div className="mb-8 flex items-center gap-4">
             <div className="h-px w-12 bg-stratum-amber" />
             <span className="font-heading text-[11px] font-bold tracking-[0.3em] text-stratum-amber uppercase">
-              02 — Stack
+              {t("tech.label")}
             </span>
           </div>
 
           <h2 className="font-heading text-4xl leading-tight font-bold tracking-tight text-stratum-text md:text-5xl">
-            Technologies
+            {t("tech.heading1")}
             <br />
-            <span className="text-stratum-text-dim">under the hood.</span>
+            <span className="text-stratum-text-dim">{t("tech.heading2")}</span>
           </h2>
         </div>
 
@@ -122,19 +93,19 @@ export function TechSection() {
           ref={cardsRef}
           className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
         >
-          {TECHNOLOGIES.map((tech) => (
+          {TECHNOLOGIES_KEYS.map((tech) => (
             <div
               key={tech.name}
               className="tech-card group rounded-lg border border-stratum-border/50 bg-stratum-surface/30 p-6 transition-all duration-300 hover:border-stratum-emerald/30 hover:bg-stratum-surface/60"
             >
               <div className="mb-1 font-heading text-[10px] font-bold tracking-[0.2em] text-stratum-emerald/60 uppercase transition-colors group-hover:text-stratum-emerald">
-                {tech.category}
+                {t(`tech.items.${tech.key}.category`)}
               </div>
               <div className="font-heading text-lg font-bold text-stratum-text">
                 {tech.name}
               </div>
               <p className="mt-3 text-sm leading-relaxed text-stratum-text-dim">
-                {tech.description}
+                {t(`tech.items.${tech.key}.description`)}
               </p>
             </div>
           ))}

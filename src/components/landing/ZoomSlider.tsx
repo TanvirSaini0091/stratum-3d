@@ -1,5 +1,6 @@
 import { type ChangeEvent } from "react"
 import { ZoomIn, ZoomOut } from "lucide-react"
+import { useTranslation } from "react-i18next"
 
 type ZoomSliderProps = {
   value: number
@@ -9,6 +10,7 @@ type ZoomSliderProps = {
 }
 
 export function ZoomSlider({ value, min, max, onChange }: ZoomSliderProps) {
+  const { t } = useTranslation()
   function handleChange(event: ChangeEvent<HTMLInputElement>) {
     onChange(Number(event.target.value))
   }
@@ -21,7 +23,7 @@ export function ZoomSlider({ value, min, max, onChange }: ZoomSliderProps) {
     <div className="pointer-events-auto mt-4 border-t border-white/8 pt-3">
       <div className="mb-2 flex items-center justify-between">
         <span className="text-[10px] font-semibold tracking-[0.18em] text-white/45 uppercase">
-          Orbital Zoom
+          {t("zoom.orbitalZoom")}
         </span>
         <span className="font-heading text-[10px] text-stratum-emerald/80 tabular-nums">
           {zoomPercent}%
@@ -42,7 +44,7 @@ export function ZoomSlider({ value, min, max, onChange }: ZoomSliderProps) {
       </div>
       {zoomPercent < 100 && (
         <p className="mt-2 text-[9px] leading-relaxed text-stratum-amber/70">
-          ↑ Zoom in to max to lock coordinates and initiate descent
+          {t("zoom.zoomHint")}
         </p>
       )}
     </div>

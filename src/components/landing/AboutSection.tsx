@@ -1,10 +1,12 @@
 import { useEffect, useRef } from "react"
 import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
+import { useTranslation } from "react-i18next"
 
 gsap.registerPlugin(ScrollTrigger)
 
 export function AboutSection() {
+  const { t } = useTranslation()
   const sectionRef = useRef<HTMLElement>(null)
   const headingRef = useRef<HTMLHeadingElement>(null)
   const bodyRef = useRef<HTMLDivElement>(null)
@@ -74,7 +76,7 @@ export function AboutSection() {
         <div ref={accentRef} className="mb-8 flex items-center gap-4">
           <div className="h-px w-12 bg-stratum-emerald" />
           <span className="font-heading text-[11px] font-bold tracking-[0.3em] text-stratum-emerald uppercase">
-            01 — About
+            {t("about.label")}
           </span>
         </div>
 
@@ -82,24 +84,18 @@ export function AboutSection() {
           ref={headingRef}
           className="font-heading text-4xl leading-tight font-bold tracking-tight text-stratum-text md:text-5xl lg:text-6xl"
         >
-          A cinematic window
+          {t("about.heading1")}
           <br />
-          <span className="text-stratum-emerald">into our world.</span>
+          <span className="text-stratum-emerald">{t("about.heading2")}</span>
         </h2>
 
         <div ref={bodyRef} className="mt-16 grid gap-12 md:grid-cols-2">
           <div className="about-body-item space-y-6">
             <p className="text-base leading-relaxed text-stratum-text-dim md:text-lg">
-              Stratum 3D is an interactive orbital experience that lets you
-              explore Earth from the vacuum of space. Navigate the globe, lock
-              onto coordinates, and plunge through the atmosphere in a cinematic
-              descent sequence.
+              {t("about.p1")}
             </p>
             <p className="text-base leading-relaxed text-stratum-text-dim md:text-lg">
-              Built entirely with WebGL and real-time 3D rendering, every
-              interaction — from the axial tilt of the planet to the night-side
-              city lights — is computed live in your browser. No pre-recorded
-              footage. No static images. Pure geometry and shaders.
+              {t("about.p2")}
             </p>
           </div>
 
@@ -110,7 +106,7 @@ export function AboutSection() {
                 128
               </div>
               <div className="mt-1 text-sm text-stratum-text-dim">
-                Sphere segments per celestial body
+                {t("about.stat1Desc")}
               </div>
             </div>
             <div className="tech-card rounded-lg bg-stratum-surface/50 p-6 backdrop-blur-sm">
@@ -118,7 +114,7 @@ export function AboutSection() {
                 60fps
               </div>
               <div className="mt-1 text-sm text-stratum-text-dim">
-                Real-time rendering target on modern hardware
+                {t("about.stat2Desc")}
               </div>
             </div>
             <div className="tech-card rounded-lg bg-stratum-surface/50 p-6 backdrop-blur-sm">
@@ -126,7 +122,7 @@ export function AboutSection() {
                 3.5s
               </div>
               <div className="mt-1 text-sm text-stratum-text-dim">
-                Full atmospheric descent duration
+                {t("about.stat3Desc")}
               </div>
             </div>
           </div>

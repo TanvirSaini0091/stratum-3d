@@ -1,6 +1,8 @@
 import { ArrowRight } from "lucide-react"
+import { useTranslation } from "react-i18next"
 
 export function Footer() {
+  const { t } = useTranslation()
   const currentYear = new Date().getFullYear()
 
   return (
@@ -17,25 +19,24 @@ export function Footer() {
               Stratum<span className="text-stratum-emerald">3D</span>
             </div>
             <p className="mt-4 text-sm leading-relaxed text-stratum-text-dim">
-              A cinematic, real-time WebGL orbital exploration experience.
-              Descend from the vacuum of space to the surface of the Earth.
+              {t("footer.description")}
             </p>
           </div>
 
           <div className="flex flex-col gap-4 lg:w-80">
             <label className="font-heading text-[10px] font-bold tracking-[0.2em] text-stratum-text-dim uppercase">
-              Join the Orbital Newsletter
+              {t("footer.newsletterLabel")}
             </label>
             <div className="relative">
               <input
                 type="email"
-                placeholder="Transmission frequency..."
+                placeholder={t("footer.newsletterPlaceholder")}
                 className="w-full rounded border border-stratum-border/50 bg-stratum-surface/30 px-4 py-3 text-sm text-stratum-text transition-all outline-none placeholder:text-stratum-text-dim/50 focus:border-stratum-emerald/50 focus:bg-stratum-surface/80"
               />
               <button
                 type="button"
                 className="absolute top-1/2 right-2 flex -translate-y-1/2 items-center justify-center rounded bg-stratum-emerald/10 p-1.5 text-stratum-emerald transition-colors hover:bg-stratum-emerald/20"
-                aria-label="Subscribe"
+                aria-label={t("footer.subscribe")}
               >
                 <ArrowRight className="h-4 w-4" />
               </button>
@@ -46,7 +47,7 @@ export function Footer() {
         {/* Bottom Section */}
         <div className="flex flex-col-reverse justify-between gap-8 border-t border-stratum-border/30 pt-8 md:flex-row md:items-center">
           <p className="text-center text-[10px] tracking-widest text-stratum-text-dim/60 uppercase md:text-left">
-            &copy; {currentYear} Stratum 3D. All rights reserved.
+            {t("footer.allRightsReserved", { year: currentYear })}
           </p>
 
           <div className="flex flex-col items-center gap-6 md:flex-row md:gap-12">
@@ -55,19 +56,19 @@ export function Footer() {
                 href="#about"
                 className="text-xs font-semibold tracking-wider text-stratum-text-dim uppercase transition-colors hover:text-stratum-text"
               >
-                About
+                {t("footer.about")}
               </a>
               <a
                 href="#technologies"
                 className="text-xs font-semibold tracking-wider text-stratum-text-dim uppercase transition-colors hover:text-stratum-text"
               >
-                Stack
+                {t("footer.stack")}
               </a>
               <a
                 href="#roadmap"
                 className="text-xs font-semibold tracking-wider text-stratum-text-dim uppercase transition-colors hover:text-stratum-text"
               >
-                Roadmap
+                {t("footer.roadmap")}
               </a>
             </nav>
 
@@ -76,7 +77,7 @@ export function Footer() {
               target="_blank"
               rel="noopener noreferrer"
               className="flex h-10 w-10 items-center justify-center rounded-full bg-stratum-surface/50 text-stratum-text-dim transition-all hover:bg-stratum-emerald/10 hover:text-stratum-emerald hover:shadow-[0_0_15px_rgba(52,211,153,0.2)]"
-              aria-label="View source on GitHub"
+              aria-label={t("footer.githubLabel")}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"

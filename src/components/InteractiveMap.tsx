@@ -2,6 +2,7 @@ import { useCallback, useState, useRef } from "react"
 import Map, { type ViewStateChangeEvent } from "react-map-gl/maplibre"
 import type { MapRef } from "react-map-gl/maplibre"
 import { ChevronUp } from "lucide-react"
+import { useTranslation } from "react-i18next"
 import "maplibre-gl/dist/maplibre-gl.css"
 
 type InteractiveMapProps = {
@@ -17,6 +18,7 @@ export function InteractiveMap({
   coordinates,
   onReturnToOrbit,
 }: InteractiveMapProps) {
+  const { t } = useTranslation()
   const mapRef = useRef<MapRef>(null)
   const [isMapLoaded, setIsMapLoaded] = useState(false)
   const [viewState, setViewState] = useState({
@@ -130,7 +132,7 @@ export function InteractiveMap({
           className="group flex cursor-pointer items-center gap-2 rounded-md border border-white/15 bg-black/65 px-4 py-2.5 font-mono text-xs font-semibold tracking-[0.12em] text-white uppercase shadow-xl backdrop-blur-md transition-all hover:border-zinc-400 hover:bg-black/90 hover:shadow-2xl"
         >
           <ChevronUp className="h-4 w-4 transition-transform group-hover:-translate-y-0.5" />
-          Return to Orbit
+          {t("map.returnToOrbit")}
         </button>
       </div>
 
@@ -148,7 +150,7 @@ export function InteractiveMap({
           <div className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
         </div>
         <div className="mt-6 animate-pulse font-mono text-xs font-semibold tracking-[0.2em] text-emerald-400/80 uppercase">
-          Calibrating Topography...
+          {t("map.calibratingTopography")}
         </div>
         <div className="mt-2 font-mono text-[10px] tracking-widest text-zinc-500">
           {coordinates.latitude.toFixed(4)}, {coordinates.longitude.toFixed(4)}

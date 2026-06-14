@@ -1,0 +1,149 @@
+{
+  "hud": {
+    "atmosphericEntry": "大気圏突入",
+    "maxZoomReached": "最大ズームに到達しました",
+    "awaitingMaxZoom": "最大ズーム待機中",
+    "lat": "緯度",
+    "lon": "経度",
+    "resumeRotation": "回転を再開",
+    "stopRotation": "回転を停止",
+    "resolvedLocation": "特定された位置",
+    "scanningTopography": "地形をスキャン中...",
+    "scanning": "スキャン中...",
+    "unknownSector": "不明なセクター",
+    "initiateDescentTo": "{{location}} への降下を開始",
+    "initiateDescent": "降下を開始",
+    "descentSequenceActive": "降下シーケンス起動中",
+    "descentActive": "降下中",
+    "awaitingLock": "ロック待機中",
+    "zoomToMaxToLock": "座標をロックするには最大までズームしてください"
+  },
+  "loader": {
+    "establishingLink": "リンクを確立中...",
+    "linkEstablished": "リンク確立",
+    "compilingShaders": "シェーダーをコンパイル中...",
+    "reestablishingLink": "軌道リンクを再確立中..."
+  },
+  "hero": {
+    "description": "軌道上から地球を探索。ズームインして座標をロックし、大気圏を降下します。"
+  },
+  "scroll": {
+    "scrollToExplore": "スクロールして探索"
+  },
+  "zoom": {
+    "orbitalZoom": "軌道ズーム",
+    "zoomHint": "↑ 座標をロックして降下を開始するには最大までズームしてください"
+  },
+  "map": {
+    "returnToOrbit": "軌道へ戻る",
+    "calibratingTopography": "地形を調整中..."
+  },
+  "tutorial": {
+    "welcomeTitle": "ようこそ",
+    "welcomeDesc": "Stratum 3Dへようこそ。このインタラクティブな体験で地球を探索しましょう。コントロールを確認してください。",
+    "navTitle": "ナビゲーション",
+    "navDesc": "ドラッグして地球儀を回転させ、表面を調査します。",
+    "navMobileDesc": "スワイプして地球儀を回転させ、表面を調査します。",
+    "zoomTitle": "ズームコントロール",
+    "zoomDesc": "ズームスライダーを使って高さを調整します。最大ズームで座標が自動的にロックされます。",
+    "coordsTitle": "座標",
+    "coordsDesc": "緯度と経度はリアルタイムで追跡されます。最大ズームでロックし、地表の位置を特定します。",
+    "surfaceTitle": "地表の探索",
+    "surfaceDesc": "座標がロックされると降下ボタンが有効になります。クリックして地上レベルに移動し、地形を探索します。",
+    "exploreTitle": "さらに探索",
+    "exploreDesc": "下にスクロールして、Stratum 3Dを支えるテクノロジーと今後の展望を見つけてください。",
+    "completeTitle": "チュートリアル完了",
+    "completeDesc": "準備完了です。景色をお楽しみください。",
+    "step": "ステップ {{current}} / {{total}}",
+    "ready": "準備完了",
+    "skip": "スキップ",
+    "begin": "開始",
+    "launch": "起動",
+    "next": "次へ"
+  },
+  "about": {
+    "label": "01 — 概要",
+    "heading1": "シネマティックな窓",
+    "heading2": "私たちの世界へ。",
+    "p1": "Stratum 3Dは宇宙の真空から地球を探索できるインタラクティブな軌道体験です。地球儀をナビゲートし、座標をロックし、シネマティックな降下シーケンスで大気圏を突き抜けます。",
+    "p2": "WebGLとリアルタイム3Dレンダリングで完全に構築されており、惑星の地軸の傾きから夜間の街の明かりまで、すべてのインタラクションがブラウザでリアルタイムに計算されます。録画された映像も静止画像もありません。純粋なジオメトリとシェーダーです。",
+    "stat1Desc": "天体ごとの球体セグメント",
+    "stat2Desc": "最新ハードウェアでのリアルタイムレンダリング目標",
+    "stat3Desc": "完全な大気圏降下時間"
+  },
+  "tech": {
+    "label": "02 — スタック",
+    "heading1": "テクノロジー",
+    "heading2": "内部の仕組み。",
+    "items": {
+      "ThreeJs": {
+        "category": "3D エンジン",
+        "description": "夜間の照明や大気効果のためのカスタムGLSLシェーダーを備えたWebGLベースの3Dレンダリング。"
+      },
+      "ReactThreeFiber": {
+        "category": "宣言的 3D",
+        "description": "軌道シーン全体のためのコンポーネント駆動アーキテクチャを可能にするThree.jsのReactレンダラー。"
+      },
+      "MapLibreGL": {
+        "category": "地図作成",
+        "description": "地表検査のための3D地形の押し出しと建物のジオメトリを備えたオープンソースのベクタータイルエンジン。"
+      },
+      "GSAP": {
+        "category": "アニメーション",
+        "description": "ランディングページのためのScrollTrigger搭載のトランジション。シネマティックな動きのための正確なイージングカーブ。"
+      },
+      "Vite": {
+        "category": "ビルドツール",
+        "description": "ネイティブESMサポートによる超高速HMRと最適化された本番ビルド。"
+      },
+      "TypeScript": {
+        "category": "言語",
+        "description": "3Dシーングラフ、マップエンジン、UIレイヤー全体でのエンドツーエンドの型安全性。"
+      }
+    }
+  },
+  "future": {
+    "label": "03 — ロードマップ",
+    "heading1": "次の展開",
+    "heading2": "今後の展望。",
+    "status": {
+      "complete": "完了",
+      "in-progress": "進行中",
+      "planned": "計画中",
+      "postponed": "延期"
+    },
+    "items": {
+      "PhaseI": {
+        "phase": "フェーズ I",
+        "title": "軌道力学",
+        "description": "地軸の傾き、雲の層、夜間の照明、完全な軌道カメラ制御を備えたリアルな地球のレンダリング。"
+      },
+      "PhaseII": {
+        "phase": "フェーズ II",
+        "title": "大気圏降下",
+        "description": "FOVの歪み、スピードライン、ワープトンネルシェーダー、およびマップエンジンへのシームレスな移行を備えたシネマティックなダイブシーケンス。"
+      },
+      "PhaseIII": {
+        "phase": "フェーズ III",
+        "title": "ランディングページとプレゼンテーション",
+        "description": "GSAPアニメーション、ズームスライダーコントロール、洗練されたセクションアーキテクチャを備えたスクロール駆動のランディングページ。"
+      },
+      "PhaseIV": {
+        "phase": "フェーズ IV",
+        "title": "フレンド位置システム",
+        "description": "3D地球儀でのリアルタイムの位置情報共有。軌道座標間で距離をマークし、友達と接続線を描画します。"
+      }
+    }
+  },
+  "footer": {
+    "description": "映画のようなリアルタイムWebGL軌道探索体験。宇宙の真空から地球の表面へ降下します。",
+    "newsletterLabel": "オービタル・ニュースレターを購読",
+    "newsletterPlaceholder": "送信周波数...",
+    "subscribe": "購読",
+    "allRightsReserved": "© {{year}} Stratum 3D. 無断複写・転載を禁じます。",
+    "about": "概要",
+    "stack": "スタック",
+    "roadmap": "ロードマップ",
+    "githubLabel": "GitHubでソースを表示"
+  }
+}

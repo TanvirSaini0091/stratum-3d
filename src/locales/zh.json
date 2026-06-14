@@ -1,0 +1,149 @@
+{
+  "hud": {
+    "atmosphericEntry": "大气层重返",
+    "maxZoomReached": "已达到最大变焦",
+    "awaitingMaxZoom": "等待最大变焦",
+    "lat": "纬度",
+    "lon": "经度",
+    "resumeRotation": "恢复旋转",
+    "stopRotation": "停止旋转",
+    "resolvedLocation": "已解析位置",
+    "scanningTopography": "正在扫描地形...",
+    "scanning": "扫描中...",
+    "unknownSector": "未知扇区",
+    "initiateDescentTo": "开始降落至 {{location}}",
+    "initiateDescent": "开始降落",
+    "descentSequenceActive": "降落程序激活",
+    "descentActive": "正在降落",
+    "awaitingLock": "等待锁定",
+    "zoomToMaxToLock": "缩放至最大以锁定坐标"
+  },
+  "loader": {
+    "establishingLink": "正在建立链接...",
+    "linkEstablished": "链接已建立",
+    "compilingShaders": "正在编译着色器...",
+    "reestablishingLink": "正在重新建立轨道链接..."
+  },
+  "hero": {
+    "description": "从轨道探索地球。放大、锁定坐标并穿过大气层降落。"
+  },
+  "scroll": {
+    "scrollToExplore": "向下滚动探索"
+  },
+  "zoom": {
+    "orbitalZoom": "轨道缩放",
+    "zoomHint": "↑ 缩放至最大以锁定坐标并开始降落"
+  },
+  "map": {
+    "returnToOrbit": "返回轨道",
+    "calibratingTopography": "正在校准地形..."
+  },
+  "tutorial": {
+    "welcomeTitle": "欢迎",
+    "welcomeDesc": "欢迎来到 Stratum 3D。在这个互动体验中，您可以探索地球。让我们来看看如何操作。",
+    "navTitle": "导航",
+    "navDesc": "点击并拖动以旋转地球仪并观察地表。",
+    "navMobileDesc": "水平滑动以旋转地球仪并观察地表。",
+    "zoomTitle": "缩放控制",
+    "zoomDesc": "使用缩放滑块来调整您的观察高度。在最大缩放时，您的坐标将自动锁定。",
+    "coordsTitle": "坐标",
+    "coordsDesc": "您的纬度和经度会实时跟踪。在最大缩放时锁定它们以解析地表位置。",
+    "surfaceTitle": "地表探索",
+    "surfaceDesc": "坐标锁定后，降落按钮将被激活。点击它切换到地面级别并探索地形。",
+    "exploreTitle": "进一步探索",
+    "exploreDesc": "向下滚动以发现 Stratum 3D 背后的技术及未来展望。",
+    "completeTitle": "教程完成",
+    "completeDesc": "一切准备就绪。尽情欣赏美景吧。",
+    "step": "第 {{current}} 步，共 {{total}} 步",
+    "ready": "准备完毕",
+    "skip": "跳过",
+    "begin": "开始",
+    "launch": "启动",
+    "next": "下一步"
+  },
+  "about": {
+    "label": "01 — 关于",
+    "heading1": "了解我们世界的",
+    "heading2": "电影级视窗。",
+    "p1": "Stratum 3D 是一种互动的轨道体验，让您可以从太空探索地球。导航地球，锁定坐标，并在电影般的降落程序中穿过大气层。",
+    "p2": "完全基于 WebGL 和实时 3D 渲染构建，每一个交互——从行星的地轴倾斜到夜间的城市灯光——都在您的浏览器中实时计算。没有预先录制的画面，没有静态图片。纯粹的几何和着色器。",
+    "stat1Desc": "每个天体的球体片段",
+    "stat2Desc": "现代硬件上的实时渲染目标",
+    "stat3Desc": "完整的大气层降落时间"
+  },
+  "tech": {
+    "label": "02 — 技术栈",
+    "heading1": "引擎盖下的",
+    "heading2": "核心技术。",
+    "items": {
+      "ThreeJs": {
+        "category": "3D 引擎",
+        "description": "基于 WebGL 的 3D 渲染，使用自定义 GLSL 着色器实现夜间照明和大气效果。"
+      },
+      "ReactThreeFiber": {
+        "category": "声明式 3D",
+        "description": "Three.js 的 React 渲染器，为整个轨道场景提供组件驱动的架构。"
+      },
+      "MapLibreGL": {
+        "category": "地图制图",
+        "description": "开源矢量瓦片引擎，具有 3D 地形挤出和用于地表检查的建筑几何图形。"
+      },
+      "GSAP": {
+        "category": "动画",
+        "description": "由 ScrollTrigger 驱动的登陆页面过渡。精准的缓动曲线带来电影般的运动效果。"
+      },
+      "Vite": {
+        "category": "构建工具",
+        "description": "极速的热模块替换 (HMR) 和优化的生产版本，原生支持 ESM。"
+      },
+      "TypeScript": {
+        "category": "语言",
+        "description": "在 3D 场景图、地图引擎和 UI 层中提供端到端的类型安全。"
+      }
+    }
+  },
+  "future": {
+    "label": "03 — 路线图",
+    "heading1": "地平线上的",
+    "heading2": "下一步。",
+    "status": {
+      "complete": "已完成",
+      "in-progress": "进行中",
+      "planned": "计划中",
+      "postponed": "已延期"
+    },
+    "items": {
+      "PhaseI": {
+        "phase": "第一阶段",
+        "title": "轨道力学",
+        "description": "逼真的地球渲染，具有地轴倾斜、云层、夜间照明和完整的轨道相机控制。"
+      },
+      "PhaseII": {
+        "phase": "第二阶段",
+        "title": "大气层降落",
+        "description": "电影般的俯冲序列，包含视野翘曲、速度线、翘曲隧道着色器，以及与地图引擎的无缝过渡。"
+      },
+      "PhaseIII": {
+        "phase": "第三阶段",
+        "title": "登陆页面与展示",
+        "description": "滚动驱动的登陆页面，具有 GSAP 动画、缩放滑块控制和精心设计的版块架构。"
+      },
+      "PhaseIV": {
+        "phase": "第四阶段",
+        "title": "好友位置系统",
+        "description": "在 3D 地球仪上实时分享位置。标记距离并在您和好友的轨道坐标之间绘制连接线。"
+      }
+    }
+  },
+  "footer": {
+    "description": "电影级的实时 WebGL 轨道探索体验。从太空的真空降落至地球表面。",
+    "newsletterLabel": "订阅轨道新闻通讯",
+    "newsletterPlaceholder": "传输频率...",
+    "subscribe": "订阅",
+    "allRightsReserved": "© {{year}} Stratum 3D. 保留所有权利。",
+    "about": "关于",
+    "stack": "技术栈",
+    "roadmap": "路线图",
+    "githubLabel": "在 GitHub 上查看源码"
+  }
+}

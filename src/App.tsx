@@ -18,6 +18,8 @@ import {
 } from "./components/AtmosphericEntryTracker"
 import { useReverseGeocode } from "./hooks/useReverseGeocode"
 import type { DescentState } from "./types/descent"
+import { useTranslation } from "react-i18next"
+import { LanguageSwitcher } from "./components/LanguageSwitcher"
 
 import { ZoomSlider } from "./components/landing/ZoomSlider"
 import { ScrollIndicator } from "./components/landing/ScrollIndicator"
@@ -102,6 +104,7 @@ function CoordinateOverlay({
   onToggleRotation: () => void
   onZoomChange: (distance: number) => void
 }) {
+  const { t } = useTranslation()
   const [isExpanded, setIsExpanded] = useState(true)
 
   const hasCoordinates =
@@ -120,9 +123,9 @@ function CoordinateOverlay({
       reverseGeocode.status === "scanning" ||
       !reverseGeocode.location)
   const locationLabel = isScanning
-    ? "Scanning topography..."
+    ? t("hud.scanningTopography")
     : reverseGeocode.location
-  const descentTarget = reverseGeocode.location ?? "Unknown Sector"
+  const descentTarget = reverseGeocode.location ?? t("hud.unknownSector")
   const descentDisabled =
     isScanning || !hasCoordinates || descentState !== "idle"
 
@@ -153,7 +156,7 @@ function CoordinateOverlay({
         className="flex w-full items-center justify-between px-4 py-3 sm:cursor-default"
       >
         <span className="text-[10px] font-semibold tracking-[0.18em] text-white/55 uppercase">
-          Atmospheric Entry
+          {t("hud.atmosphericEntry")}
         </span>
         <div className="sm:hidden">
           {isExpanded ? (
@@ -176,16 +179,16 @@ function CoordinateOverlay({
           />
           <span>
             {coordinates?.maxZoomReached
-              ? "Max zoom reached"
-              : "Awaiting max zoom"}
+              ? t("hud.maxZoomReached")
+              : t("hud.awaitingMaxZoom")}
           </span>
         </div>
         <dl className="mt-3 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-white/80">
-          <dt>Lat</dt>
+          <dt>{t("hud.lat")}</dt>
           <dd className="text-right text-white">
             {hasCoordinates ? coordinates.latitude.toFixed(6) : "--"}
           </dd>
-          <dt>Lon</dt>
+          <dt>{t("hud.lon")}</dt>
           <dd className="text-right text-white">
             {hasCoordinates ? coordinates.longitude.toFixed(6) : "--"}
           </dd>
@@ -200,7 +203,7 @@ function CoordinateOverlay({
           ) : (
             <Pause aria-hidden="true" className="h-3.5 w-3.5" />
           )}
-          {rotationPaused ? "Resume Rotation" : "Stop Rotation"}
+          {rotationPaused ? t("hud.resumeRotation") : t("hud.stopRotation")}
         </button>
 
         {/* Zoom Slider — replaces scroll-to-zoom in orbit view */}
@@ -216,7 +219,7 @@ function CoordinateOverlay({
         {isLocked && (
           <div className="mt-4 border-t border-white/10 pt-3">
             <div className="text-[10px] font-semibold tracking-[0.18em] text-white/45 uppercase">
-              Resolved Location
+              {t("hud.resolvedLocation")}
             </div>
             <div
               className={`mt-1 text-sm ${
@@ -232,8 +235,8 @@ function CoordinateOverlay({
               onClick={handleInitiateDescent}
             >
               {descentState === "idle"
-                ? `Initiate Descent To ${descentTarget}`
-                : "Descent Sequence Active"}
+                ? t("hud.initiateDescentTo", { location: descentTarget })
+                : t("hud.descentSequenceActive")}
             </button>
           </div>
         )}
@@ -260,6 +263,7 @@ function Crosshair({ isLocked }: { isLocked: boolean }) {
 
 function GlobalLoader() {
   const { progress, total } = useProgress()
+  const { t } = useTranslation()
   const [show, setShow] = useState(true)
   const [earthRendered, setEarthRendered] = useState(false)
 
@@ -284,14 +288,14 @@ function GlobalLoader() {
   if (!show) return null
 
   // Determine the display text based on the exact phase of loading
-  let statusText = "Establishing Link..."
+  let statusText = t("loader.establishingLink")
   let percentageText = `${total > 0 ? Math.round(progress) : 0}%`
 
   if (earthRendered) {
-    statusText = "Link Established"
+    statusText = t("loader.linkEstablished")
     percentageText = "100%"
   } else if (progress === 100 && total > 0) {
-    statusText = "Compiling Shaders..."
+    statusText = t("loader.compilingShaders")
     percentageText = "99%"
   }
 
@@ -317,6 +321,7 @@ function GlobalLoader() {
 // opposite to the HUD so it doesn't overlap.
 
 function HeroTitle({ isLocked }: { isLocked: boolean }) {
+  const { t } = useTranslation()
   return (
     <div
       className={`pointer-events-none absolute right-6 bottom-40 z-10 text-right transition-opacity duration-500 sm:bottom-24 md:right-12 ${
@@ -328,8 +333,7 @@ function HeroTitle({ isLocked }: { isLocked: boolean }) {
         <span className="text-stratum-emerald">3D</span>
       </h1>
       <p className="mt-3 max-w-xs text-sm leading-relaxed text-white/40 md:max-w-sm md:text-base">
-        Explore Earth from orbit. Zoom in, lock coordinates, and descend through
-        the atmosphere.
+        {t("hero.description")}
       </p>
     </div>
   )
@@ -338,6 +342,7 @@ function HeroTitle({ isLocked }: { isLocked: boolean }) {
 // ─── Main App ───────────────────────────────────────────
 
 export default function App() {
+  const { t } = useTranslation()
   const earthRef = useRef<THREE.Mesh>(null)
   const mainRef = useRef<HTMLDivElement>(null)
   const heroRef = useRef<HTMLDivElement>(null)
@@ -493,7 +498,7 @@ export default function App() {
                 <div className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
               </div>
               <div className="mt-6 animate-pulse text-center font-mono text-xs font-semibold tracking-[0.2em] text-emerald-400/80 uppercase">
-                Re-establishing Orbital Link...
+                {t("loader.reestablishingLink")}
               </div>
             </div>
           )}
@@ -527,7 +532,7 @@ export default function App() {
               <div className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
             </div>
             <div className="mt-6 animate-pulse text-center font-mono text-xs font-semibold tracking-[0.2em] text-emerald-400/80 uppercase">
-              Re-establishing Orbital Link...
+              {t("loader.reestablishingLink")}
             </div>
           </div>
         )}
@@ -539,6 +544,7 @@ export default function App() {
         data-tutorial="canvas"
         className="relative h-dvh w-full overflow-hidden"
       >
+        <LanguageSwitcher />
         {showHud && (
           <>
             {isMobile ? (
@@ -555,6 +561,11 @@ export default function App() {
               />
             ) : (
               <CoordinateOverlay
+                onBegin={() => setHasStarted(true)}
+                title={t("loader.establishingLink")}
+                subtitle={t("loader.compilingShaders")}
+                completedTitle={t("loader.linkEstablished")}
+                reestablishingTitle={t("loader.reestablishingLink")}
                 coordinates={entryCoordinates}
                 descentState={descentState}
                 rotationPaused={rotationPaused}

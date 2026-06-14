@@ -1,0 +1,149 @@
+{
+  "hud": {
+    "atmosphericEntry": "Atmospheric Entry",
+    "maxZoomReached": "Max zoom reached",
+    "awaitingMaxZoom": "Awaiting max zoom",
+    "lat": "Lat",
+    "lon": "Lon",
+    "resumeRotation": "Resume Rotation",
+    "stopRotation": "Stop Rotation",
+    "resolvedLocation": "Resolved Location",
+    "scanningTopography": "Scanning topography...",
+    "scanning": "Scanning...",
+    "unknownSector": "Unknown Sector",
+    "initiateDescentTo": "Initiate Descent To {{location}}",
+    "initiateDescent": "Initiate Descent",
+    "descentSequenceActive": "Descent Sequence Active",
+    "descentActive": "Descent Active",
+    "awaitingLock": "Awaiting lock",
+    "zoomToMaxToLock": "Zoom to max to lock coordinates"
+  },
+  "loader": {
+    "establishingLink": "Establishing Link...",
+    "linkEstablished": "Link Established",
+    "compilingShaders": "Compiling Shaders...",
+    "reestablishingLink": "Re-establishing Orbital Link..."
+  },
+  "hero": {
+    "description": "Explore Earth from orbit. Zoom in, lock coordinates, and descend through the atmosphere."
+  },
+  "scroll": {
+    "scrollToExplore": "Scroll to explore"
+  },
+  "zoom": {
+    "orbitalZoom": "Orbital Zoom",
+    "zoomHint": "↑ Zoom in to max to lock coordinates and initiate descent"
+  },
+  "map": {
+    "returnToOrbit": "Return to Orbit",
+    "calibratingTopography": "Calibrating Topography..."
+  },
+  "tutorial": {
+    "welcomeTitle": "Welcome",
+    "welcomeDesc": "Welcome to Stratum 3D. This interactive experience lets you explore Earth. Let's go over the controls.",
+    "navTitle": "Navigation",
+    "navDesc": "Click and drag to rotate the globe and survey the surface.",
+    "navMobileDesc": "Swipe horizontally to rotate the globe and survey the surface.",
+    "zoomTitle": "Zoom Controls",
+    "zoomDesc": "Use the zoom slider to adjust your viewing height. At maximum zoom, your coordinates lock automatically.",
+    "coordsTitle": "Coordinates",
+    "coordsDesc": "Your latitude and longitude are tracked in real-time. Lock them at max zoom to resolve a surface location.",
+    "surfaceTitle": "Surface Exploration",
+    "surfaceDesc": "With coordinates locked, the descent button activates. Click it to transition to ground level and explore the terrain.",
+    "exploreTitle": "Explore Further",
+    "exploreDesc": "Scroll down to discover the technology powering Stratum 3D and what's on the horizon.",
+    "completeTitle": "Tutorial Complete",
+    "completeDesc": "You're all set. Enjoy the view.",
+    "step": "Step {{current}} of {{total}}",
+    "ready": "Ready",
+    "skip": "Skip",
+    "begin": "Begin",
+    "launch": "Launch",
+    "next": "Next"
+  },
+  "about": {
+    "label": "01 — About",
+    "heading1": "A cinematic window",
+    "heading2": "into our world.",
+    "p1": "Stratum 3D is an interactive orbital experience that lets you explore Earth from the vacuum of space. Navigate the globe, lock onto coordinates, and plunge through the atmosphere in a cinematic descent sequence.",
+    "p2": "Built entirely with WebGL and real-time 3D rendering, every interaction — from the axial tilt of the planet to the night-side city lights — is computed live in your browser. No pre-recorded footage. No static images. Pure geometry and shaders.",
+    "stat1Desc": "Sphere segments per celestial body",
+    "stat2Desc": "Real-time rendering target on modern hardware",
+    "stat3Desc": "Full atmospheric descent duration"
+  },
+  "tech": {
+    "label": "02 — Stack",
+    "heading1": "Technologies",
+    "heading2": "under the hood.",
+    "items": {
+      "ThreeJs": {
+        "category": "3D Engine",
+        "description": "WebGL-powered 3D rendering with custom GLSL shaders for night-side illumination and atmospheric effects."
+      },
+      "ReactThreeFiber": {
+        "category": "Declarative 3D",
+        "description": "React renderer for Three.js enabling a component-driven architecture for the entire orbital scene."
+      },
+      "MapLibreGL": {
+        "category": "Cartography",
+        "description": "Open-source vector tile engine with 3D terrain extrusion and building geometry for surface inspection."
+      },
+      "GSAP": {
+        "category": "Animation",
+        "description": "ScrollTrigger-powered transitions for the landing page. Precise easing curves for cinematic motion."
+      },
+      "Vite": {
+        "category": "Build Tool",
+        "description": "Lightning-fast HMR and optimized production builds with native ESM support."
+      },
+      "TypeScript": {
+        "category": "Language",
+        "description": "End-to-end type safety across the 3D scene graph, map engine, and UI layer."
+      }
+    }
+  },
+  "future": {
+    "label": "03 — Roadmap",
+    "heading1": "What’s next",
+    "heading2": "on the horizon.",
+    "status": {
+      "complete": "Complete",
+      "in-progress": "In Progress",
+      "planned": "Planned",
+      "postponed": "Postponed"
+    },
+    "items": {
+      "PhaseI": {
+        "phase": "Phase I",
+        "title": "Orbital Mechanics",
+        "description": "Realistic Earth rendering with axial tilt, cloud layers, night-side illumination, and full orbital camera controls."
+      },
+      "PhaseII": {
+        "phase": "Phase II",
+        "title": "Atmospheric Descent",
+        "description": "Cinematic dive sequence with FOV warping, speed lines, warp tunnel shader, and seamless transition to the map engine."
+      },
+      "PhaseIII": {
+        "phase": "Phase III",
+        "title": "Landing Page & Presentation",
+        "description": "Scroll-driven landing page with GSAP animations, zoom slider controls, and polished section architecture."
+      },
+      "PhaseIV": {
+        "phase": "Phase IV",
+        "title": "Friend Location System",
+        "description": "Real-time location sharing on the 3D globe. Mark distance and draw connection lines between you and your friends' orbital coordinates."
+      }
+    }
+  },
+  "footer": {
+    "description": "A cinematic, real-time WebGL orbital exploration experience. Descend from the vacuum of space to the surface of the Earth.",
+    "newsletterLabel": "Join the Orbital Newsletter",
+    "newsletterPlaceholder": "Transmission frequency...",
+    "subscribe": "Subscribe",
+    "allRightsReserved": "© {{year}} Stratum 3D. All rights reserved.",
+    "about": "About",
+    "stack": "Stack",
+    "roadmap": "Roadmap",
+    "githubLabel": "View source on GitHub"
+  }
+}

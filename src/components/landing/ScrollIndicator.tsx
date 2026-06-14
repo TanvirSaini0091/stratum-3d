@@ -1,11 +1,13 @@
 import { useEffect, useRef } from "react"
 import { ChevronDown } from "lucide-react"
+import { useTranslation } from "react-i18next"
 
 type ScrollIndicatorProps = {
   visible: boolean
 }
 
 export function ScrollIndicator({ visible }: ScrollIndicatorProps) {
+  const { t } = useTranslation()
   const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -21,7 +23,7 @@ export function ScrollIndicator({ visible }: ScrollIndicatorProps) {
       style={{ opacity: 0 }}
     >
       <span className="font-heading text-[10px] font-bold tracking-[0.25em] text-white/40 uppercase">
-        Scroll to explore
+        {t("scroll.scrollToExplore")}
       </span>
       <ChevronDown className="scroll-bounce h-4 w-4 text-stratum-emerald/60" />
     </div>

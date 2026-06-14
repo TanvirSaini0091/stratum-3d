@@ -1,54 +1,17 @@
 import { useCallback, useEffect, useState } from "react"
 import { ChevronRight, X, HelpCircle, Rocket } from "lucide-react"
+import { useTranslation } from "react-i18next"
 
 const STORAGE_KEY = "stratum-onboarding-v1"
 
-type TutorialStep = {
-  title: string
-  description: string
-  mobileDescription?: string
-  targetSelector?: string
-}
-
-const STEPS: TutorialStep[] = [
-  {
-    title: "Welcome",
-    description:
-      "Welcome to Stratum 3D. This interactive experience lets you explore Earth. Let's go over the controls.",
-  },
-  {
-    title: "Navigation",
-    description: "Click and drag to rotate the globe and survey the surface.",
-    mobileDescription:
-      "Swipe horizontally to rotate the globe and survey the surface.",
-  },
-  {
-    title: "Zoom Controls",
-    description:
-      "Use the zoom slider to adjust your viewing height. At maximum zoom, your coordinates lock automatically.",
-    targetSelector: "[data-tutorial='zoom']",
-  },
-  {
-    title: "Coordinates",
-    description:
-      "Your latitude and longitude are tracked in real-time. Lock them at max zoom to resolve a surface location.",
-    targetSelector: "[data-tutorial='coordinates']",
-  },
-  {
-    title: "Surface Exploration",
-    description:
-      "With coordinates locked, the descent button activates. Click it to transition to ground level and explore the terrain.",
-  },
-  {
-    title: "Explore Further",
-    description:
-      "Scroll down to discover the technology powering Stratum 3D and what's on the horizon.",
-    targetSelector: "[data-tutorial='scroll']",
-  },
-  {
-    title: "Tutorial Complete",
-    description: "You're all set. Enjoy the view.",
-  },
+const STEPS_KEYS = [
+  { key: "welcome", targetSelector: undefined },
+  { key: "nav", targetSelector: undefined },
+  { key: "zoom", targetSelector: "[data-tutorial='zoom']" },
+  { key: "coords", targetSelector: "[data-tutorial='coordinates']" },
+  { key: "surface", targetSelector: undefined },
+  { key: "explore", targetSelector: "[data-tutorial='scroll']" },
+  { key: "complete", targetSelector: undefined },
 ]
 
 type OnboardingTutorialProps = {
@@ -62,6 +25,7 @@ export function OnboardingTutorial({
   isMobile,
   onComplete,
 }: OnboardingTutorialProps) {
+  const { t } = useTranslation()
   const [currentStep, setCurrentStep] = useState(0)
   const [isVisible, setIsVisible] = useState(false)
   const [spotlightRect, setSpotlightRect] = useState<DOMRect | null>(null)
@@ -81,7 +45,7 @@ export function OnboardingTutorial({
   // Update spotlight when step changes
   useEffect(() => {
     if (!isActive) return
-    const step = STEPS[currentStep]
+    const step = STEPS_KEYS[currentStep]
     if (step.targetSelector) {
       const el = document.querySelector(step.targetSelector)
       if (el) {
@@ -96,7 +60,7 @@ export function OnboardingTutorial({
   useEffect(() => {
     if (!isActive) return
     function update() {
-      const step = STEPS[currentStep]
+      const step = STEPS_KEYS[currentStep]
       if (step.targetSelector) {
         const el = document.querySelector(step.targetSelector)
         if (el) setSpotlightRect(el.getBoundingClientRect())
@@ -116,7 +80,7 @@ export function OnboardingTutorial({
   }, [onComplete])
 
   const handleNext = useCallback(() => {
-    if (currentStep < STEPS.length - 1) {
+    if (currentStep < STEPS_KEYS.length - 1) {
       setCurrentStep((prev) => prev + 1)
     } else {
       handleDismiss()
@@ -125,13 +89,14 @@ export function OnboardingTutorial({
 
   if (!isActive) return null
 
-  const step = STEPS[currentStep]
-  const description =
-    isMobile && step.mobileDescription
-      ? step.mobileDescription
-      : step.description
+  const step = STEPS_KEYS[currentStep]
+  const title = t(`tutorial.${step.key}Title`)
+  let description = t(`tutorial.${step.key}Desc`)
+  if (isMobile && step.key === "nav") {
+    description = t("tutorial.navMobileDesc")
+  }
   const isFirst = currentStep === 0
-  const isLast = currentStep === STEPS.length - 1
+  const isLast = currentStep === STEPS_KEYS.length - 1
 
   // Position the instruction card relative to the spotlight
   let cardStyle: React.CSSProperties
@@ -219,16 +184,16 @@ export function OnboardingTutorial({
               )}
               <span className="font-mono text-[10px] tracking-[0.15em] text-white/25 uppercase">
                 {isFirst
-                  ? "Welcome"
+                  ? t("tutorial.welcomeTitle")
                   : isLast
-                    ? "Ready"
-                    : `Step ${currentStep} of ${STEPS.length - 2}`}
+                    ? t("tutorial.ready")
+                    : t("tutorial.step", { current: currentStep, total: STEPS_KEYS.length - 2 })}
               </span>
             </div>
 
             {/* Title */}
             <h3 className="font-heading text-base font-bold tracking-tight text-white">
-              {step.title}
+              {title}
             </h3>
 
             {/* Description — key forces remount for CSS animation */}
@@ -247,21 +212,21 @@ export function OnboardingTutorial({
                 className="flex items-center gap-1 font-mono text-[10px] tracking-[0.1em] text-white/20 uppercase transition-colors hover:text-white/50"
               >
                 <X className="h-3 w-3" />
-                Skip
+                {t("tutorial.skip")}
               </button>
               <button
                 type="button"
                 onClick={handleNext}
                 className="flex items-center gap-1.5 rounded-full border border-stratum-emerald/25 bg-stratum-emerald/10 px-4 py-2 font-mono text-[11px] font-semibold tracking-[0.08em] text-stratum-emerald uppercase transition-all hover:bg-stratum-emerald/20 active:scale-95"
               >
-                {isFirst ? "Begin" : isLast ? "Launch" : "Next"}
+                {isFirst ? t("tutorial.begin") : isLast ? t("tutorial.launch") : t("tutorial.next")}
                 <ChevronRight className="h-3.5 w-3.5" />
               </button>
             </div>
 
             {/* Step indicator dots */}
             <div className="mt-4 flex justify-center gap-1.5">
-              {STEPS.map((_, i) => (
+              {STEPS_KEYS.map((_, i) => (
                 <div
                   key={i}
                   className={`h-1 rounded-full transition-all duration-300 ${
