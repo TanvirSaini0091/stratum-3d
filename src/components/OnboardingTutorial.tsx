@@ -133,14 +133,18 @@ export function OnboardingTutorial({
   const isFirst = currentStep === 0
   const isLast = currentStep === STEPS.length - 1
 
-// Position the instruction card relative to the spotlight
+  // Position the instruction card relative to the spotlight
   let cardStyle: React.CSSProperties
   if (spotlightRect) {
     if (isMobile) {
       // On mobile, space is tight. Anchor the card to the opposite half of the screen.
       const spotlightCenterY = spotlightRect.top + spotlightRect.height / 2
       if (spotlightCenterY < window.innerHeight / 2) {
-        cardStyle = { bottom: "24px", left: "50%", transform: "translateX(-50%)" }
+        cardStyle = {
+          bottom: "24px",
+          left: "50%",
+          transform: "translateX(-50%)",
+        }
       } else {
         cardStyle = { top: "24px", left: "50%", transform: "translateX(-50%)" }
       }

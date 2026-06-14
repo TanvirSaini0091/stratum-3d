@@ -1,6 +1,7 @@
 import { useRef } from "react"
+import { ChevronsDown } from "lucide-react"
 
-export function MobileScrollHandle() {
+export function MobileScrollHandle({ isLocked }: { isLocked: boolean }) {
   const startY = useRef(0)
 
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -11,25 +12,31 @@ export function MobileScrollHandle() {
     const currentY = e.touches[0].clientY
     const diffY = startY.current - currentY
 
-    // If the user drags the pill upwards by more than 45 pixels, trigger the scroll
+    // Trigger scroll if pulled upwards
     if (diffY > 45) {
       window.scrollTo({
-        top: window.innerHeight, // Scrolls down exactly one screen height
+        top: window.innerHeight,
         behavior: "smooth",
       })
     }
   }
 
+  // If locked, jump up above the CTA. If unlocked, sit near the bottom of the screen.
+  const bottomPosition = isLocked
+    ? "bottom-[calc(120px+env(safe-area-inset-bottom))]"
+    : "bottom-[calc(1.5rem+env(safe-area-inset-bottom))]"
+
   return (
     <div
-      className="pointer-events-auto absolute bottom-4 left-1/2 z-30 -translate-x-1/2 touch-none p-4"
+      className={`pointer-events-auto absolute ${bottomPosition} left-1/2 z-30 -translate-x-1/2 touch-none p-4 transition-all duration-500`}
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
     >
-      <div className="attention-wiggle flex h-12 w-36 flex-col items-center justify-center rounded-full border border-white/10 bg-black/60 shadow-[0_0_20px_rgba(52,211,153,0.15)] backdrop-blur-md transition-colors active:bg-black/80">
-        <span className="font-mono text-[9px] font-semibold tracking-[0.15em] text-white/50 uppercase">
-          Pull to scroll
+      <div className="attention-wiggle flex flex-col items-center justify-center gap-1 opacity-75 transition-opacity active:opacity-100">
+        <span className="font-mono text-[9px] font-semibold tracking-[0.2em] text-white/90 uppercase drop-shadow-md">
+          Scroll
         </span>
+        <ChevronsDown className="h-4 w-4 text-stratum-emerald drop-shadow-md" />
       </div>
     </div>
   )

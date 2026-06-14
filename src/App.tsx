@@ -316,9 +316,13 @@ function GlobalLoader() {
 // Floating title displayed on the hero section, positioned
 // opposite to the HUD so it doesn't overlap.
 
-function HeroTitle() {
+function HeroTitle({ isLocked }: { isLocked: boolean }) {
   return (
-    <div className="pointer-events-none absolute right-6 bottom-36 z-10 text-right sm:bottom-24 md:right-12">
+    <div
+      className={`pointer-events-none absolute right-6 bottom-40 z-10 text-right transition-opacity duration-500 sm:bottom-24 md:right-12 ${
+        isLocked ? "opacity-0" : "opacity-100"
+      }`}
+    >
       <h1 className="font-heading text-4xl leading-none font-bold tracking-tight text-white/90 md:text-6xl lg:text-7xl">
         Stratum
         <span className="text-stratum-emerald">3D</span>
@@ -470,7 +474,7 @@ export default function App() {
   // ─── Landed State: Full-screen map, no landing page sections ───
   if (!showPlanetaryScene && landedCoordinates) {
     return (
-      <main className="relative h-screen w-screen overflow-hidden bg-black">
+      <main className="relative h-dvh w-screen overflow-hidden bg-black">
         <InteractiveMap
           coordinates={landedCoordinates}
           onReturnToOrbit={handleReturnToOrbit}
@@ -533,7 +537,7 @@ export default function App() {
       <div
         ref={heroRef}
         data-tutorial="canvas"
-        className="relative h-screen w-full overflow-hidden"
+        className="relative h-dvh w-full overflow-hidden"
       >
         {showHud && (
           <>
@@ -561,10 +565,10 @@ export default function App() {
               />
             )}
             <Crosshair isLocked={isLocked} />
-            <HeroTitle />
+            <HeroTitle isLocked={isLocked} />
             {/* Show standard indicator on desktop, Draggable handle on mobile */}
             {isMobile ? (
-              <MobileScrollHandle />
+              <MobileScrollHandle isLocked={isLocked} />
             ) : (
               <ScrollIndicator visible={descentState === "idle" && !isLocked} />
             )}
