@@ -561,11 +561,6 @@ export default function App() {
               />
             ) : (
               <CoordinateOverlay
-                onBegin={() => setHasStarted(true)}
-                title={t("loader.establishingLink")}
-                subtitle={t("loader.compilingShaders")}
-                completedTitle={t("loader.linkEstablished")}
-                reestablishingTitle={t("loader.reestablishingLink")}
                 coordinates={entryCoordinates}
                 descentState={descentState}
                 rotationPaused={rotationPaused}
