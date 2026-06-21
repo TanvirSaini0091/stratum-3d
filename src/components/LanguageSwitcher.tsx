@@ -29,15 +29,15 @@ export function LanguageSwitcher() {
     <div className="absolute top-4 right-4 z-50" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 rounded-full border border-white/10 bg-black/50 px-3 py-1.5 text-xs font-medium text-white shadow-lg backdrop-blur-md transition-colors hover:border-white/30 hover:bg-black/70"
+        className="flex items-center gap-2 rounded-full border border-neutral-800 bg-neutral-950/90 px-3 py-1.5 text-xs font-medium text-white shadow-lg backdrop-blur-md transition-colors hover:border-neutral-600 hover:bg-neutral-900"
       >
-        <Globe className="h-3.5 w-3.5 text-stratum-emerald" />
+        <Globe className="h-3.5 w-3.5 text-neutral-400" />
         <span>{currentLang.label}</span>
-        <ChevronDown className={`h-3 w-3 text-white/50 transition-transform ${isOpen ? "rotate-180" : ""}`} />
+        <ChevronDown className={`h-3 w-3 text-neutral-500 transition-transform ${isOpen ? "rotate-180" : ""}`} />
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-36 origin-top-right rounded-lg border border-white/10 bg-[#111]/95 p-1 shadow-2xl backdrop-blur-xl">
+        <div className="absolute right-0 mt-2 w-36 origin-top-right rounded-lg border border-neutral-800 bg-neutral-950 p-1 shadow-2xl">
           {languages.map((lang) => (
             <button
               key={lang.code}
@@ -47,12 +47,12 @@ export function LanguageSwitcher() {
               }}
               className={`flex w-full items-center justify-between rounded-md px-3 py-2 text-left text-xs transition-colors ${
                 i18n.language === lang.code
-                  ? "bg-stratum-emerald/15 text-stratum-emerald"
-                  : "text-white/70 hover:bg-white/5 hover:text-white"
+                  ? "bg-neutral-800 font-semibold text-white"
+                  : "text-neutral-400 hover:bg-neutral-800 hover:text-white"
               }`}
             >
               {lang.label}
-              {i18n.language === lang.code && <Check className="h-3 w-3" />}
+              {i18n.language === lang.code && <Check className="h-3 w-3 text-white" />}
             </button>
           ))}
         </div>

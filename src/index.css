@@ -325,19 +325,6 @@
   overflow: hidden;
 }
 
-.tech-card::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  padding: 1px;
-  background: linear-gradient(135deg, rgba(52, 211, 153, 0.3), transparent 60%);
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  mask-composite: exclude;
-  -webkit-mask-composite: xor;
-  pointer-events: none;
-}
-
 /* ─── Scan Line ─────────────────────────────────────── */
 
 @keyframes scanline {

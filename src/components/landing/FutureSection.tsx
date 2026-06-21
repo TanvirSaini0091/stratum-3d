@@ -19,25 +19,20 @@ const ROADMAP_KEYS: RoadmapItemKey[] = [
 
 const STATUS_STYLES = {
   complete: {
-    dot: "bg-stratum-emerald",
-    badge:
-      "border-stratum-emerald/30 text-stratum-emerald bg-stratum-emerald/10",
-    label: "Complete",
+    dot: "bg-emerald-500",
+    badge: "border-emerald-500/30 text-emerald-400 bg-emerald-500/10",
   },
   "in-progress": {
-    dot: "bg-stratum-amber",
-    badge: "border-stratum-amber/30 text-stratum-amber bg-stratum-amber/10",
-    label: "In Progress",
+    dot: "bg-amber-500",
+    badge: "border-amber-500/30 text-amber-400 bg-amber-500/10",
   },
   planned: {
-    dot: "bg-stratum-text-dim",
-    badge: "border-stratum-border text-stratum-text-dim bg-stratum-surface/30",
-    label: "Planned",
+    dot: "bg-neutral-500",
+    badge: "border-neutral-700 text-neutral-400 bg-neutral-800/50",
   },
   postponed: {
-    dot: "bg-red-500/60",
+    dot: "bg-red-500",
     badge: "border-red-500/30 text-red-400 bg-red-500/10",
-    label: "Postponed",
   },
 }
 
@@ -91,57 +86,55 @@ export function FutureSection() {
     <section
       ref={sectionRef}
       id="roadmap"
-      className="grain-overlay relative min-h-screen bg-stratum-black px-6 py-32 transition-all duration-500 ease-in-out md:px-16 lg:px-24"
+      className="bg-neutral-950 p-8 font-sans text-neutral-200"
     >
-      <div className="section-divider absolute top-0 right-0 left-0" />
-
       <div className="mx-auto max-w-5xl">
-        <div className="future-heading mb-16">
-          <div className="mb-8 flex items-center gap-4">
-            <div className="h-px w-12 bg-stratum-emerald" />
-            <span className="font-heading text-[11px] font-bold tracking-[0.3em] text-stratum-emerald uppercase">
+        <div className="future-heading mb-10">
+          <div className="mb-4 flex items-center gap-4">
+            <div className="h-px w-8 bg-neutral-600" />
+            <span className="text-xs font-bold tracking-[0.2em] text-neutral-400 uppercase">
               {t("future.label")}
             </span>
           </div>
 
-          <h2 className="font-heading text-4xl leading-tight font-bold tracking-tight text-stratum-text md:text-5xl">
+          <h2 className="text-4xl font-extrabold tracking-tight text-white md:text-5xl">
             {t("future.heading1")}
             <br />
-            <span className="text-stratum-text-dim">{t("future.heading2")}</span>
+            <span className="text-neutral-500">{t("future.heading2")}</span>
           </h2>
         </div>
 
-        <div ref={itemsRef} className="space-y-6">
+        <div ref={itemsRef} className="flex flex-col gap-4">
           {ROADMAP_KEYS.map((item) => {
             const style = STATUS_STYLES[item.status]
 
             return (
               <div
                 key={item.key}
-                className="roadmap-item group flex gap-6 rounded-lg border border-stratum-border/30 bg-stratum-surface/20 p-6 transition-all duration-300 hover:border-stratum-border/60 hover:bg-stratum-surface/40"
+                className="roadmap-item flex gap-6 rounded-lg border border-neutral-800 bg-transparent p-5"
               >
                 {/* Timeline dot */}
                 <div className="flex flex-col items-center pt-1">
-                  <div className={`h-3 w-3 rounded-full ${style.dot}`} />
-                  <div className="mt-2 h-full w-px bg-stratum-border/30" />
+                  <div className={`h-3 w-2.5 rounded-full ${style.dot}`} />
+                  <div className="mt-2 h-full w-px bg-neutral-800" />
                 </div>
 
                 {/* Content */}
-                <div className="flex-1">
+                <div className="flex-1 pb-2">
                   <div className="mb-2 flex flex-wrap items-center gap-3">
-                    <span className="font-heading text-[10px] font-bold tracking-[0.2em] text-stratum-text-dim uppercase">
+                    <span className="text-xs font-bold tracking-[0.2em] text-neutral-500 uppercase">
                       {t(`future.items.${item.key}.phase`)}
                     </span>
                     <span
-                      className={`rounded-full border px-2 py-0.5 text-[9px] font-semibold tracking-wider uppercase ${style.badge}`}
+                      className={`rounded-full border px-1 py-0.5 text-[10px] font-semibold tracking-wider uppercase ${style.badge}`}
                     >
                       {t(`future.status.${item.status}`)}
                     </span>
                   </div>
-                  <h3 className="font-heading text-xl font-bold text-stratum-text">
+                  <h3 className="text-xl font-bold text-white">
                     {t(`future.items.${item.key}.title`)}
                   </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-stratum-text-dim">
+                  <p className="mt-2 text-sm leading-relaxed text-neutral-400">
                     {t(`future.items.${item.key}.description`)}
                   </p>
                 </div>

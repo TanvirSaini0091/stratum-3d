@@ -66,62 +66,59 @@ export function AboutSection() {
     <section
       ref={sectionRef}
       id="about"
-      className="grain-overlay scanline-effect relative min-h-screen bg-stratum-black px-6 py-32 transition-all duration-500 ease-in-out md:px-16 lg:px-24"
+      className="bg-neutral-950 p-8 font-sans text-neutral-200"
     >
-      {/* Geometric accent */}
-      <div className="absolute top-0 right-0 left-0 h-px bg-gradient-to-r from-transparent via-stratum-emerald/20 to-transparent" />
-
       <div className="mx-auto max-w-5xl">
         {/* Section Label */}
-        <div ref={accentRef} className="mb-8 flex items-center gap-4">
-          <div className="h-px w-12 bg-stratum-emerald" />
-          <span className="font-heading text-[11px] font-bold tracking-[0.3em] text-stratum-emerald uppercase">
+        <div ref={accentRef} className="mb-4 flex items-center gap-4">
+          <div className="h-px w-8 bg-neutral-600" />
+          <span className="text-xs font-bold tracking-[0.2em] text-neutral-400 uppercase">
             {t("about.label")}
           </span>
         </div>
 
         <h2
           ref={headingRef}
-          className="font-heading text-4xl leading-tight font-bold tracking-tight text-stratum-text md:text-5xl lg:text-6xl"
+          className="mb-10 text-4xl font-extrabold tracking-tight text-white md:text-5xl"
         >
           {t("about.heading1")}
           <br />
-          <span className="text-stratum-emerald">{t("about.heading2")}</span>
+          <span className="text-neutral-500">{t("about.heading2")}</span>
         </h2>
 
-        <div ref={bodyRef} className="mt-16 grid gap-12 md:grid-cols-2">
-          <div className="about-body-item space-y-6">
-            <p className="text-base leading-relaxed text-stratum-text-dim md:text-lg">
+        <div ref={bodyRef} className="grid gap-10 md:grid-cols-2">
+          <div className="about-body-item flex flex-col gap-6">
+            <p className="leading-relaxed text-neutral-400 md:text-lg">
               {t("about.p1")}
             </p>
-            <p className="text-base leading-relaxed text-stratum-text-dim md:text-lg">
+            <p className="leading-relaxed text-neutral-400 md:text-lg">
               {t("about.p2")}
             </p>
           </div>
 
-          <div className="about-body-item space-y-8">
+          <div className="about-body-item flex flex-col gap-4">
             {/* Stat cards */}
-            <div className="tech-card rounded-lg bg-stratum-surface/50 p-6 backdrop-blur-sm">
-              <div className="font-heading text-3xl font-bold text-stratum-emerald">
-                128
+            <div className="rounded-lg border border-neutral-800 bg-neutral-900 p-5">
+              <div className="text-2xl font-bold text-white">
+                GLSL
               </div>
-              <div className="mt-1 text-sm text-stratum-text-dim">
+              <div className="mt-1 text-sm text-neutral-400">
                 {t("about.stat1Desc")}
               </div>
             </div>
-            <div className="tech-card rounded-lg bg-stratum-surface/50 p-6 backdrop-blur-sm">
-              <div className="font-heading text-3xl font-bold text-stratum-amber">
+            <div className="rounded-lg border border-neutral-800 bg-neutral-900 p-5">
+              <div className="text-2xl font-bold text-white">
                 60fps
               </div>
-              <div className="mt-1 text-sm text-stratum-text-dim">
+              <div className="mt-1 text-sm text-neutral-400">
                 {t("about.stat2Desc")}
               </div>
             </div>
-            <div className="tech-card rounded-lg bg-stratum-surface/50 p-6 backdrop-blur-sm">
-              <div className="font-heading text-3xl font-bold text-stratum-text">
-                3.5s
+            <div className="rounded-lg border border-neutral-800 bg-neutral-900 p-5">
+              <div className="text-2xl font-bold text-white">
+                5,000
               </div>
-              <div className="mt-1 text-sm text-stratum-text-dim">
+              <div className="mt-1 text-sm text-neutral-400">
                 {t("about.stat3Desc")}
               </div>
             </div>

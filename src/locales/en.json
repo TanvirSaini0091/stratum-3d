@@ -28,7 +28,8 @@
     "description": "Explore Earth from orbit. Zoom in, lock coordinates, and descend through the atmosphere."
   },
   "scroll": {
-    "scrollToExplore": "Scroll to explore"
+    "scrollToExplore": "Scroll to explore",
+    "scrollMobile": "Scroll"
   },
   "zoom": {
     "orbitalZoom": "Orbital Zoom",
@@ -67,9 +68,9 @@
     "heading2": "into our world.",
     "p1": "Stratum 3D is an interactive orbital experience that lets you explore Earth from the vacuum of space. Navigate the globe, lock onto coordinates, and plunge through the atmosphere in a cinematic descent sequence.",
     "p2": "Built entirely with WebGL and real-time 3D rendering, every interaction — from the axial tilt of the planet to the night-side city lights — is computed live in your browser. No pre-recorded footage. No static images. Pure geometry and shaders.",
-    "stat1Desc": "Sphere segments per celestial body",
+    "stat1Desc": "Custom fragment shaders for procedural day/night cycles",
     "stat2Desc": "Real-time rendering target on modern hardware",
-    "stat3Desc": "Full atmospheric descent duration"
+    "stat3Desc": "Individually rendered background stars"
   },
   "tech": {
     "label": "02 — Stack",

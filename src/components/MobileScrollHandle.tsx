@@ -1,7 +1,9 @@
 import { useRef } from "react"
 import { ChevronsDown } from "lucide-react"
+import { useTranslation } from "react-i18next"
 
 export function MobileScrollHandle({ isLocked }: { isLocked: boolean }) {
+  const { t } = useTranslation()
   const startY = useRef(0)
 
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -33,10 +35,10 @@ export function MobileScrollHandle({ isLocked }: { isLocked: boolean }) {
       onTouchMove={handleTouchMove}
     >
       <div className="attention-wiggle flex flex-col items-center justify-center gap-1 opacity-75 transition-opacity active:opacity-100">
-        <span className="font-mono text-[9px] font-semibold tracking-[0.2em] text-white/90 uppercase drop-shadow-md">
-          Scroll
+        <span className="font-mono text-[11px] font-bold tracking-[0.2em] text-white-400 uppercase">
+          {t("scroll.scrollMobile")}
         </span>
-        <ChevronsDown className="h-4 w-4 text-stratum-emerald drop-shadow-md" />
+        <ChevronsDown className="h-4.5 w-4.5 text-white-500" />
       </div>
     </div>
   )

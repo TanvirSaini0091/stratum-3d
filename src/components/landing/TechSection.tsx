@@ -69,23 +69,21 @@ export function TechSection() {
     <section
       ref={sectionRef}
       id="technologies"
-      className="grain-overlay relative min-h-screen bg-stratum-void px-6 py-32 transition-all duration-500 ease-in-out md:px-16 lg:px-24"
+      className="bg-neutral-950 p-8 font-sans text-neutral-200"
     >
-      <div className="section-divider absolute top-0 right-0 left-0" />
-
       <div className="mx-auto max-w-5xl">
-        <div className="tech-section-heading mb-16">
-          <div className="mb-8 flex items-center gap-4">
-            <div className="h-px w-12 bg-stratum-amber" />
-            <span className="font-heading text-[11px] font-bold tracking-[0.3em] text-stratum-amber uppercase">
+        <div className="tech-section-heading mb-10">
+          <div className="mb-4 flex items-center gap-4">
+            <div className="h-px w-8 bg-neutral-600" />
+            <span className="text-xs font-bold tracking-[0.2em] text-neutral-400 uppercase">
               {t("tech.label")}
             </span>
           </div>
 
-          <h2 className="font-heading text-4xl leading-tight font-bold tracking-tight text-stratum-text md:text-5xl">
+          <h2 className="text-4xl font-extrabold tracking-tight text-white md:text-5xl">
             {t("tech.heading1")}
             <br />
-            <span className="text-stratum-text-dim">{t("tech.heading2")}</span>
+            <span className="text-neutral-500">{t("tech.heading2")}</span>
           </h2>
         </div>
 
@@ -96,15 +94,15 @@ export function TechSection() {
           {TECHNOLOGIES_KEYS.map((tech) => (
             <div
               key={tech.name}
-              className="tech-card group rounded-lg border border-stratum-border/50 bg-stratum-surface/30 p-6 transition-all duration-300 hover:border-stratum-emerald/30 hover:bg-stratum-surface/60"
+              className="tech-card rounded-lg border border-neutral-800 bg-transparent p-5"
             >
-              <div className="mb-1 font-heading text-[10px] font-bold tracking-[0.2em] text-stratum-emerald/60 uppercase transition-colors group-hover:text-stratum-emerald">
+              <div className="mb-1 text-xs font-bold tracking-[0.2em] text-neutral-500 uppercase">
                 {t(`tech.items.${tech.key}.category`)}
               </div>
-              <div className="font-heading text-lg font-bold text-stratum-text">
+              <div className="text-xl font-bold text-white">
                 {tech.name}
               </div>
-              <p className="mt-3 text-sm leading-relaxed text-stratum-text-dim">
+              <p className="mt-2 text-sm leading-relaxed text-neutral-400">
                 {t(`tech.items.${tech.key}.description`)}
               </p>
             </div>

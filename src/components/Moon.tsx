@@ -2,10 +2,9 @@ import { useRef } from "react"
 import { useFrame } from "@react-three/fiber"
 import { useTexture } from "@react-three/drei"
 import * as THREE from "three"
-import { SPHERE_SEGMENTS } from "../constants"
 
 export function Moon({ speedMultiplier = 1 }: { speedMultiplier?: number }) {
-  const moonTexture = useTexture("/moon-texture.jpg")
+  const moonTexture = useTexture("/moon-texture-2k.webp")
   const orbitRef = useRef<THREE.Group>(null)
   const moonRef = useRef<THREE.Mesh>(null)
 
@@ -22,7 +21,7 @@ export function Moon({ speedMultiplier = 1 }: { speedMultiplier?: number }) {
   return (
     <group ref={orbitRef} rotation={[0, 0, 0]}>
       <mesh ref={moonRef} position={[20, 0, 0]} receiveShadow>
-        <sphereGeometry args={[0.54, SPHERE_SEGMENTS, SPHERE_SEGMENTS]} />
+        <sphereGeometry args={[0.54, 32, 32]} />
         <meshStandardMaterial
           map={moonTexture}
           roughness={1}

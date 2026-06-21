@@ -80,15 +80,15 @@ export function MobileHud({
         <button
           type="button"
           onClick={() => setIsPillExpanded((v) => !v)}
-          className={`flex items-center gap-2 rounded-full border bg-black/60 px-4 py-2.5 font-mono text-[11px] shadow-lg backdrop-blur-md transition-all duration-300 ${
+          className={`flex items-center gap-2 rounded-full border bg-neutral-950/90 px-4 py-2.5 font-mono text-[11px] shadow-lg backdrop-blur-md transition-all duration-300 ${
             isLocked
-              ? "border-emerald-400/25 text-white"
-              : "border-white/12 text-white/75"
+              ? " text-white"
+              : "border-neutral-800 text-neutral-400"
           }`}
         >
           <MapPin
             className={`h-3.5 w-3.5 shrink-0 transition-colors ${
-              isLocked ? "text-emerald-400" : "text-white/30"
+              isLocked ? "text-white" : "text-neutral-600"
             }`}
           />
           {hasCoordinates ? (
@@ -97,22 +97,22 @@ export function MobileHud({
               {coordinates.longitude.toFixed(4)}°
             </span>
           ) : (
-            <span className="text-white/30">{t("hud.awaitingLock")}</span>
+            <span className="text-neutral-500">{t("hud.awaitingLock")}</span>
           )}
         </button>
 
         {/* Expanded location tooltip */}
         <div
-          className={`mx-auto mt-2 overflow-hidden rounded-lg border bg-black/70 text-center font-mono text-xs shadow-lg backdrop-blur-md transition-all duration-300 ${
+          className={`mx-auto mt-2 overflow-hidden rounded-lg border bg-neutral-950/90 text-center font-mono text-xs shadow-lg backdrop-blur-md transition-all duration-300 ${
             isPillExpanded && isLocked
-              ? "max-h-20 border-white/10 px-4 py-2 opacity-100"
+              ? "max-h-20 border-neutral-800 px-4 py-2 opacity-100"
               : "max-h-0 border-transparent px-4 py-0 opacity-0"
           }`}
         >
-          <div className="text-[9px] tracking-[0.15em] text-white/30 uppercase">
+          <div className="text-[9px] tracking-[0.15em] text-neutral-500 uppercase">
             {t("hud.resolvedLocation")}
           </div>
-          <div className="mt-0.5 whitespace-nowrap text-white/85">
+          <div className="mt-0.5 whitespace-nowrap text-white">
             {locationLabel}
           </div>
         </div>
@@ -123,11 +123,12 @@ export function MobileHud({
         data-tutorial="zoom"
         className="pointer-events-auto absolute top-1/2 left-3 flex -translate-y-1/2 flex-col items-center gap-2"
       >
-        <ZoomIn className="h-3 w-3 text-white/35" />
-        <div className="flex items-center justify-center rounded-full border border-white/10 bg-black/40 px-2.5 py-3 backdrop-blur-md">
+        <ZoomIn className="h-3 w-3 text-white-400" />
+        <div className="flex items-center justify-center rounded-full border border-neutral-800 bg-neutral-950/90 px-2.5 py-3 backdrop-blur-md">
           <input
             type="range"
-            className="zoom-slider-vertical"
+            className="h-24 w-1.5 cursor-pointer accent-white"
+            style={{ WebkitAppearance: "slider-vertical", writingMode: "vertical-lr", direction: "rtl" }}
             min={minDistance}
             max={maxDistance}
             step={0.1}
@@ -135,8 +136,8 @@ export function MobileHud({
             onChange={handleZoomChange}
           />
         </div>
-        <ZoomOut className="h-3 w-3 text-white/35" />
-        <span className="font-mono text-[9px] text-stratum-emerald/55 tabular-nums">
+        <ZoomOut className="h-3 w-3 text-white-400" />
+        <span className="font-mono text-[9px] text-white-400 tabular-nums">
           {zoomPercent}%
         </span>
       </div>
@@ -146,7 +147,7 @@ export function MobileHud({
         <button
           type="button"
           onClick={onToggleRotation}
-          className="flex h-10 w-10 items-center justify-center rounded-full border border-white/12 bg-black/50 text-white/65 shadow-lg backdrop-blur-md transition-all active:scale-90"
+          className="flex h-10 w-10 items-center justify-center rounded-full border border-neutral-800 bg-neutral-950/90 text-neutral-400 shadow-lg backdrop-blur-md transition-all hover:text-white active:scale-90"
           aria-label={rotationPaused ? t("hud.resumeRotation") : t("hud.stopRotation")}
         >
           {rotationPaused ? (
@@ -162,7 +163,7 @@ export function MobileHud({
         <div className="mobile-slide-up pointer-events-auto absolute right-4 bottom-[calc(2rem+env(safe-area-inset-bottom))] left-4">
           <button
             type="button"
-            className="flex w-full items-center justify-center gap-2.5 rounded-full border border-emerald-400/25 bg-emerald-500/12 px-5 py-3.5 font-mono text-[11px] font-semibold tracking-[0.12em] text-emerald-200 uppercase shadow-[0_0_25px_rgba(52,211,153,0.1)] backdrop-blur-md transition-all active:scale-[0.97] disabled:border-white/8 disabled:bg-white/5 disabled:text-white/25 disabled:shadow-none"
+            className="flex w-full items-center justify-center gap-2.5 rounded-full border border-neutral-700 bg-neutral-800 px-5 py-3.5 font-mono text-[11px] font-semibold tracking-[0.12em] text-white uppercase backdrop-blur-md transition-all active:scale-[0.97] disabled:border-neutral-800 disabled:bg-neutral-900 disabled:text-neutral-600"
             disabled={descentDisabled}
             onClick={handleInitiateDescent}
           >
@@ -172,7 +173,7 @@ export function MobileHud({
 
           {/* Wrapped the location text in a dark blur pill for readability */}
           {!isScanning && locationLabel && (
-            <div className="mx-auto mt-2.5 w-fit rounded-md border border-white/10 bg-black/60 px-3 py-1 text-center font-mono text-[10px] tracking-wider text-white/90 shadow-lg backdrop-blur-md">
+            <div className="mx-auto mt-2.5 w-fit rounded-md border border-neutral-800 bg-neutral-950 px-3 py-1 text-center font-mono text-[10px] tracking-wider text-white shadow-lg backdrop-blur-md">
               → {locationLabel}
             </div>
           )}
@@ -181,7 +182,7 @@ export function MobileHud({
       {/* ── Zoom Hint (when not locked) ── */}
       {!isLocked && (
         <div className="pointer-events-none absolute right-0 bottom-20 left-0 text-center">
-          <span className="inline-block rounded-full border border-stratum-amber/12 bg-black/35 px-3 py-1.5 font-mono text-[9px] tracking-wider text-stratum-amber/50 backdrop-blur-sm">
+          <span className="inline-block rounded-full border border-neutral-800 bg-neutral-950/80 px-3 py-1.5 font-mono text-[9px] tracking-wider text-neutral-500 backdrop-blur-sm">
             {t("hud.zoomToMaxToLock")}
           </span>
         </div>

@@ -10,9 +10,9 @@ type EarthProps = {
 }
 
 export function Earth({ earthRef, rotationPaused = false }: EarthProps) {
-  const earthTexture = useTexture("/earth-texture.jpg")
-  const cloudsTexture = useTexture("/clouds-texture.jpg")
-  const nightTexture = useTexture("/earth-night-texture.jpg")
+  const earthTexture = useTexture("/earth-texture-2k.webp")
+  const cloudsTexture = useTexture("/clouds-texture-2k.webp")
+  const nightTexture = useTexture("/earth-night-texture-2k.webp")
 
   const localEarthRef = useRef<THREE.Mesh>(null)
   const resolvedEarthRef = earthRef ?? localEarthRef

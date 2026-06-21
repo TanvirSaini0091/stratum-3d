@@ -153,7 +153,7 @@ export function OnboardingTutorial({
             width: spotlightRect.width + 20,
             height: spotlightRect.height + 20,
             boxShadow: "0 0 0 9999px rgba(0, 0, 0, 0.85)",
-            border: "1px solid rgba(52, 211, 153, 0.15)",
+            border: "1px solid rgba(255, 255, 255, 0.1)",
           }}
         />
       ) : (
@@ -166,23 +166,20 @@ export function OnboardingTutorial({
         style={cardStyle}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="overflow-hidden rounded-xl border border-white/10 bg-[#111]/95 shadow-2xl shadow-black/50 backdrop-blur-xl">
-          {/* Decorative top accent */}
-          <div className="h-[2px] bg-gradient-to-r from-transparent via-stratum-emerald/40 to-transparent" />
-
+        <div className="overflow-hidden rounded-xl border border-neutral-800 bg-neutral-950 shadow-2xl">
           <div className="p-5">
             {/* Step badge */}
             <div className="mb-3 flex items-center gap-2.5">
               {isFirst ? (
-                <div className="flex h-6 w-6 items-center justify-center rounded-md bg-stratum-emerald/15">
-                  <Rocket className="h-3.5 w-3.5 text-stratum-emerald" />
+                <div className="flex h-6 w-6 items-center justify-center rounded-md bg-neutral-800">
+                  <Rocket className="h-3.5 w-3.5 text-white" />
                 </div>
               ) : (
-                <div className="flex h-6 w-6 items-center justify-center rounded-md bg-stratum-emerald/15 font-mono text-[11px] font-bold text-stratum-emerald">
+                <div className="flex h-6 w-6 items-center justify-center rounded-md bg-neutral-800 font-mono text-[11px] font-bold text-neutral-300">
                   {currentStep}
                 </div>
               )}
-              <span className="font-mono text-[10px] tracking-[0.15em] text-white/25 uppercase">
+              <span className="font-mono text-[10px] tracking-[0.15em] text-neutral-500 uppercase">
                 {isFirst
                   ? t("tutorial.welcomeTitle")
                   : isLast
@@ -199,7 +196,7 @@ export function OnboardingTutorial({
             {/* Description — key forces remount for CSS animation */}
             <p
               key={currentStep}
-              className="tutorial-text-enter mt-2 text-[13px] leading-relaxed text-white/50"
+              className="tutorial-text-enter mt-2 text-[13px] leading-relaxed text-neutral-400"
             >
               {description}
             </p>
@@ -209,7 +206,7 @@ export function OnboardingTutorial({
               <button
                 type="button"
                 onClick={handleDismiss}
-                className="flex items-center gap-1 font-mono text-[10px] tracking-[0.1em] text-white/20 uppercase transition-colors hover:text-white/50"
+                className="flex items-center gap-1 font-mono text-[10px] tracking-[0.1em] text-neutral-500 uppercase transition-colors hover:text-neutral-300"
               >
                 <X className="h-3 w-3" />
                 {t("tutorial.skip")}
@@ -217,7 +214,7 @@ export function OnboardingTutorial({
               <button
                 type="button"
                 onClick={handleNext}
-                className="flex items-center gap-1.5 rounded-full border border-stratum-emerald/25 bg-stratum-emerald/10 px-4 py-2 font-mono text-[11px] font-semibold tracking-[0.08em] text-stratum-emerald uppercase transition-all hover:bg-stratum-emerald/20 active:scale-95"
+                className="flex items-center gap-1.5 rounded-full border border-neutral-700 bg-neutral-800 px-2.5 py-2 font-mono text-[11px] font-semibold tracking-[0.08em] text-white uppercase transition-all hover:border-neutral-500 hover:bg-neutral-700 active:scale-95"
               >
                 {isFirst ? t("tutorial.begin") : isLast ? t("tutorial.launch") : t("tutorial.next")}
                 <ChevronRight className="h-3.5 w-3.5" />
@@ -231,10 +228,10 @@ export function OnboardingTutorial({
                   key={i}
                   className={`h-1 rounded-full transition-all duration-300 ${
                     i === currentStep
-                      ? "w-4 bg-stratum-emerald"
+                      ? "w-4 bg-white"
                       : i < currentStep
-                        ? "w-1.5 bg-stratum-emerald/30"
-                        : "w-1.5 bg-white/10"
+                        ? "w-1.5 bg-neutral-600"
+                        : "w-1.5 bg-neutral-800"
                   }`}
                 />
               ))}
@@ -252,7 +249,7 @@ export function TutorialHelpButton({ onClick }: { onClick: () => void }) {
     <button
       type="button"
       onClick={onClick}
-      className="pointer-events-auto flex h-8 w-8 items-center justify-center rounded-full border border-white/10 bg-black/40 text-white/25 backdrop-blur-md transition-all hover:border-white/20 hover:text-white/55 active:scale-90"
+      className="pointer-events-auto flex h-8 w-8 items-center justify-center rounded-full border border-neutral-800 bg-neutral-900 text-neutral-400 transition-all hover:border-neutral-600 hover:text-white active:scale-90"
       aria-label="Show tutorial"
     >
       <HelpCircle className="h-4 w-4" />

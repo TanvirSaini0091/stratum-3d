@@ -22,10 +22,10 @@ export function ScrollIndicator({ visible }: ScrollIndicatorProps) {
       className="pointer-events-none absolute bottom-8 left-1/2 z-20 flex -translate-x-1/2 flex-col items-center gap-3 transition-opacity duration-700"
       style={{ opacity: 0 }}
     >
-      <span className="font-heading text-[10px] font-bold tracking-[0.25em] text-white/40 uppercase">
+      <span className="text-[10px] font-bold tracking-[0.25em] text-neutral-400 uppercase">
         {t("scroll.scrollToExplore")}
       </span>
-      <ChevronDown className="scroll-bounce h-4 w-4 text-stratum-emerald/60" />
+      <ChevronDown className="scroll-bounce h-4 w-4 text-neutral-500" />
     </div>
   )
 }

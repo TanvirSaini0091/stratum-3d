@@ -20,30 +20,30 @@ export function ZoomSlider({ value, min, max, onChange }: ZoomSliderProps) {
   const zoomPercent = Math.round(((max - value) / (max - min)) * 100)
 
   return (
-    <div className="pointer-events-auto mt-4 border-t border-white/8 pt-3">
+    <div className="pointer-events-auto mt-4 border-t border-neutral-800 pt-3">
       <div className="mb-2 flex items-center justify-between">
-        <span className="text-[10px] font-semibold tracking-[0.18em] text-white/45 uppercase">
+        <span className="text-[10px] font-bold tracking-[0.18em] text-neutral-500 uppercase">
           {t("zoom.orbitalZoom")}
         </span>
-        <span className="font-heading text-[10px] text-stratum-emerald/80 tabular-nums">
+        <span className="font-mono text-[10px] text-neutral-300 tabular-nums">
           {zoomPercent}%
         </span>
       </div>
       <div className="flex items-center gap-2">
-        <ZoomOut className="h-3 w-3 shrink-0 text-white/30" />
+        <ZoomOut className="h-3 w-3 shrink-0 text-neutral-600" />
         <input
           type="range"
-          className="zoom-slider"
+          className="w-full cursor-pointer accent-white"
           min={min}
           max={max}
           step={0.1}
           value={value}
           onChange={handleChange}
         />
-        <ZoomIn className="h-3 w-3 shrink-0 text-white/30" />
+        <ZoomIn className="h-3 w-3 shrink-0 text-neutral-600" />
       </div>
       {zoomPercent < 100 && (
-        <p className="mt-2 text-[9px] leading-relaxed text-stratum-amber/70">
+        <p className="mt-2 text-[9px] leading-relaxed text-neutral-500">
           {t("zoom.zoomHint")}
         </p>
       )}

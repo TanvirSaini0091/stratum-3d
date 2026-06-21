@@ -144,7 +144,7 @@ function CoordinateOverlay({
   return (
     <div
       data-tutorial="coordinates"
-      className="pointer-events-auto absolute top-4 left-4 z-10 w-[min(22rem,calc(100vw-2rem))] rounded-md border border-white/15 bg-black/65 font-mono text-xs text-white shadow-xl backdrop-blur-md transition-all duration-300"
+      className="pointer-events-auto absolute top-4 left-4 z-10 w-[min(22rem,calc(100vw-2rem))] rounded-md border border-neutral-800 bg-neutral-950/90 font-mono text-xs text-neutral-200 shadow-xl transition-all duration-300"
     >
       {/* Header / Toggle */}
       <button
@@ -155,14 +155,14 @@ function CoordinateOverlay({
         }}
         className="flex w-full items-center justify-between px-4 py-3 sm:cursor-default"
       >
-        <span className="text-[10px] font-semibold tracking-[0.18em] text-white/55 uppercase">
+        <span className="text-[10px] font-bold tracking-[0.18em] text-neutral-500 uppercase">
           {t("hud.atmosphericEntry")}
         </span>
         <div className="sm:hidden">
           {isExpanded ? (
-            <ChevronUp className="h-4 w-4 text-white/55" />
+            <ChevronUp className="h-4 w-4 text-neutral-500" />
           ) : (
-            <ChevronDown className="h-4 w-4 text-white/55" />
+            <ChevronDown className="h-4 w-4 text-neutral-500" />
           )}
         </div>
       </button>
@@ -174,16 +174,16 @@ function CoordinateOverlay({
         <div className="flex items-center gap-2 text-sm">
           <span
             className={`h-2 w-2 rounded-full ${
-              coordinates?.maxZoomReached ? "bg-emerald-400" : "bg-white/30"
+              coordinates?.maxZoomReached ? "bg-white" : "bg-neutral-600"
             }`}
           />
-          <span>
+          <span className="text-neutral-300">
             {coordinates?.maxZoomReached
               ? t("hud.maxZoomReached")
               : t("hud.awaitingMaxZoom")}
           </span>
         </div>
-        <dl className="mt-3 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-white/80">
+        <dl className="mt-3 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-neutral-400">
           <dt>{t("hud.lat")}</dt>
           <dd className="text-right text-white">
             {hasCoordinates ? coordinates.latitude.toFixed(6) : "--"}
@@ -195,7 +195,7 @@ function CoordinateOverlay({
         </dl>
         <button
           type="button"
-          className="pointer-events-auto mt-3 flex w-full items-center justify-center gap-2 rounded border border-white/15 bg-white/5 px-3 py-2 text-[11px] font-semibold tracking-[0.12em] text-white/85 uppercase transition-colors hover:border-white/30 hover:bg-white/10"
+          className="pointer-events-auto mt-3 flex w-full items-center justify-center gap-2 rounded border border-neutral-800 bg-neutral-900 px-3 py-2 text-[11px] font-semibold tracking-[0.12em] text-neutral-300 uppercase transition-colors hover:border-neutral-600 hover:bg-neutral-800 hover:text-white"
           onClick={onToggleRotation}
         >
           {rotationPaused ? (
@@ -217,20 +217,20 @@ function CoordinateOverlay({
         </div>
 
         {isLocked && (
-          <div className="mt-4 border-t border-white/10 pt-3">
-            <div className="text-[10px] font-semibold tracking-[0.18em] text-white/45 uppercase">
+          <div className="mt-4 border-t border-neutral-800 pt-3">
+            <div className="text-[10px] font-bold tracking-[0.18em] text-neutral-500 uppercase">
               {t("hud.resolvedLocation")}
             </div>
             <div
               className={`mt-1 text-sm ${
-                reverseGeocode.isLoading ? "text-white/60" : "text-white"
+                reverseGeocode.isLoading ? "text-neutral-500" : "text-white"
               }`}
             >
               {locationLabel}
             </div>
             <button
               type="button"
-              className="pointer-events-auto mt-3 w-full rounded border border-emerald-300/45 bg-emerald-300/10 px-3 py-2 text-[11px] font-semibold tracking-[0.12em] text-emerald-100 uppercase transition-colors hover:border-emerald-200 hover:bg-emerald-300/20 disabled:cursor-wait disabled:border-white/15 disabled:bg-white/5 disabled:text-white/40"
+              className="pointer-events-auto mt-3 w-full rounded border border-neutral-700 bg-neutral-800 px-3 py-2 text-[11px] font-semibold tracking-[0.12em] text-white uppercase transition-colors hover:border-neutral-500 hover:bg-neutral-700 disabled:cursor-wait disabled:border-neutral-800 disabled:bg-neutral-900 disabled:text-neutral-600"
               disabled={descentDisabled}
               onClick={handleInitiateDescent}
             >
@@ -250,7 +250,7 @@ function Crosshair({ isLocked }: { isLocked: boolean }) {
     <div className="pointer-events-none absolute top-1/2 left-1/2 z-10 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center">
       <div
         className={`relative flex h-8 w-8 items-center justify-center transition-colors duration-300 ${
-          isLocked ? "scale-110 text-emerald-400" : "scale-100 text-white/40"
+          isLocked ? "scale-110 text-white" : "scale-100 text-white/40"
         }`}
       >
         <div className="absolute h-full w-[1px] bg-current" />
@@ -301,15 +301,15 @@ function GlobalLoader() {
 
   return (
     <div
-      className={`fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-black/10 backdrop-blur-2xl transition-opacity duration-700 ${
+      className={`fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-neutral-950 transition-opacity duration-700 ${
         earthRendered ? "opacity-0" : "opacity-100"
       }`}
     >
       <div className="relative flex h-16 w-16 items-center justify-center">
-        <div className="absolute h-full w-full animate-spin rounded-full border-2 border-stratum-emerald/20 border-t-stratum-emerald" />
-        <div className="h-2 w-2 rounded-full bg-stratum-emerald shadow-[0_0_15px_rgba(52,211,153,0.8)]" />
+        <div className="absolute h-full w-full animate-spin rounded-full border-2 border-neutral-800 border-t-white" />
+        <div className="h-2 w-2 rounded-full bg-white" />
       </div>
-      <div className="mt-8 animate-pulse font-heading text-[11px] font-bold tracking-[0.4em] text-stratum-emerald uppercase">
+      <div className="mt-8 animate-pulse font-mono text-[11px] font-bold tracking-[0.4em] text-white uppercase">
         {statusText} {percentageText}
       </div>
     </div>
@@ -407,7 +407,7 @@ export default function App() {
           trigger: contentRef.current,
           start: "top 100%",
           end: "top 40%",
-          scrub: true,
+           scrub: true,
         },
         opacity: 0.3,
         scale: 0.98,
@@ -494,10 +494,10 @@ export default function App() {
           {isReturning && (
             <div className="flex flex-col items-center justify-center text-white">
               <div className="relative flex h-12 w-12 items-center justify-center">
-                <div className="absolute h-full w-full animate-spin rounded-full border-2 border-emerald-500/20 border-t-emerald-400" />
-                <div className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+                <div className="absolute h-full w-full animate-spin rounded-full border-2 border-neutral-800 border-t-white" />
+                <div className="h-1.5 w-1.5 rounded-full bg-white" />
               </div>
-              <div className="mt-6 animate-pulse text-center font-mono text-xs font-semibold tracking-[0.2em] text-emerald-400/80 uppercase">
+              <div className="mt-6 animate-pulse text-center font-mono text-xs font-semibold tracking-[0.2em] text-neutral-400 uppercase">
                 {t("loader.reestablishingLink")}
               </div>
             </div>
@@ -507,9 +507,11 @@ export default function App() {
     )
   }
 
+  const Divider = () => <div className="h-px w-full bg-neutral-800" />
+
   // ─── Landing Page State: Hero + Sections ───
   return (
-    <div ref={mainRef} className="relative bg-stratum-black">
+    <div ref={mainRef} className="relative bg-neutral-950">
       <GlobalLoader />
 
       {/* ── Onboarding Tutorial ── */}
@@ -528,10 +530,10 @@ export default function App() {
         {isReturning && (
           <div className="flex flex-col items-center justify-center text-white">
             <div className="relative flex h-12 w-12 items-center justify-center">
-              <div className="absolute h-full w-full animate-spin rounded-full border-2 border-emerald-500/20 border-t-emerald-400" />
-              <div className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+              <div className="absolute h-full w-full animate-spin rounded-full border-2 border-neutral-800 border-t-white" />
+              <div className="h-1.5 w-1.5 rounded-full bg-white" />
             </div>
-            <div className="mt-6 animate-pulse text-center font-mono text-xs font-semibold tracking-[0.2em] text-emerald-400/80 uppercase">
+            <div className="mt-6 animate-pulse text-center font-mono text-xs font-semibold tracking-[0.2em] text-neutral-400 uppercase">
               {t("loader.reestablishingLink")}
             </div>
           </div>
@@ -635,10 +637,13 @@ export default function App() {
       </div>
 
       {/* ── CONTENT SECTIONS: Slide up over the pinned hero ── */}
-      <div ref={contentRef} className="relative z-30">
+      <div ref={contentRef} className="relative z-30 bg-neutral-950">
         <AboutSection />
+        <Divider />
         <TechSection />
+        <Divider />
         <FutureSection />
+        <Divider />
         <Footer />
       </div>
     </div>
